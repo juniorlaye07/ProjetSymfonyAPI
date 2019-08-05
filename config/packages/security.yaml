@@ -40,6 +40,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
        
+        - { path: ^/api/utilisateur,             roles: ROLE_ADMIN }
         - { path: ^/api/utilisateur,             roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/super/partenaire,        roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/caisier/,                roles: ROLE_CAISIER }

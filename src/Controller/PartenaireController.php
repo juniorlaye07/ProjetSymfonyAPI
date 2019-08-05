@@ -11,28 +11,30 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @Route("/api/super")
  */
 class PartenaireController extends AbstractController
 {
-//=======================================>Ajouter un partenaire<====================================£========================================================================================// 
+    //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("/partenaire", name="partenaire", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
-
         $values = json_decode($request->getContent());
-
-        if (isset($values->ninea, $values->raisonSocial, $values->username, $values->password)) {
+        if (!empty($values->ninea)&& !empty($values->raisonSocial)&& !empty($values->username)&& !empty($values->password)&&
+        !empty($values->nom)&& !empty($values->prenom)&& !empty($values->tel)&& !empty($values->status)&& is_numeric($values->tel)&&
+        is_numeric ($values->telephone)&& (strlen($values->telephone)==9)&& (strlen($values->tel)==9))
+        {
 //=================================>l'administrateur du préstataire<=======================£================================================================//
             $user = new Utilisateur();
             $user->setUsername($values->username);
@@ -56,7 +58,7 @@ class PartenaireController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-            //=======================================>le compte associe au préstataire<====================================£==============================================================//
+//=======================================>le compte associe au préstataire<====================================£==============================================================//
             $comptebank = new Compte();
             $code = "";
             $jour = date('d');
@@ -94,8 +96,8 @@ class PartenaireController extends AbstractController
             return new JsonResponse($data, 201);
         }
         $data = [
-            'statut' => 500,
-            'messag' => 'Vous devez renseigner les champs manquants!'
+            'statu' => 500,
+            'mesag' => 'Veillez renseignez les champs avec des infos valides!'
         ];
         return new JsonResponse($data, 500);
     }
@@ -151,7 +153,7 @@ class PartenaireController extends AbstractController
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());
-        if (isset($values->solde)) {
+        if (!empty($values->partenaire)) {
         
         $comptebank = new Compte();
         $code = "";
@@ -177,6 +179,11 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data, 201);
         }
+        $data = [
+            'statut' => 400,
+            'messag' => 'Le solde initial du compte doit etre égale à 0 !'
+        ];
+        return new JsonResponse($data);
     }
 }
 //======================================================================>Juniorlaye07<=================================================================================//

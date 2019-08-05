@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -21,7 +22,7 @@ class CaisierController extends AbstractController
     //=============Faire un dépot d'argent===========================£================================================================//
     /**
      * @Route("/depotcompte", name="depot", methods={"POST"})
-     * @IsGranted("ROLE_CAISIER",message="Acces Refusé !")
+     * @Security("is_granted('ROLE_CAISIER')",message="Veillez vous connecter en tant que Caisier!")
      */
     public function FaireDepot(Request $request,  EntityManagerInterface $entityManager)
     {
@@ -31,11 +32,11 @@ class CaisierController extends AbstractController
         $repo = "";
         $caisier = "";
 
-        if (isset($values->montant)) {
+        if (!empty($values->montant)&&(($values->montant) >= "75000")) {
             $depo = new Depot();
             $depo->setDateDepot(new \DateTime());
             $depo->setMontant($values->montant);
-            if (($values->montant) >= "75000") {
+            
 
 
                 $repo = $this->getDoctrine()->getRepository(Utilisateur::class);
@@ -60,19 +61,11 @@ class CaisierController extends AbstractController
                     'msg' => 'Le depot  a été bien enregistré !'
                 ];
                 return new JsonResponse($data, 201);
-            } else {
-
-                $data = [
-                    'status' => 400,
-                    'message' => 'Le montant de votre dépot est insuffisant !'
-                ];
-                return new JsonResponse($data, 400);
-            }
         }
 
         $data = [
             'status' => 500,
-            'message' => 'Vous devez renseigner tous les champs,s\'il vous plait!'
+            'message' => 'Vous devez renseigner tous les champs et votre montant est insuffisant!'
         ];
         return new JsonResponse($data, 500);
     }

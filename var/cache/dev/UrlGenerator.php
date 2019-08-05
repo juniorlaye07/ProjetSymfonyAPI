@@ -19,6 +19,7 @@ return [
     'partenaire' => [[], ['_controller' => 'App\\Controller\\PartenaireController::add'], [], [['text', '/api/super/partenaire']], [], []],
     'updatparten' => [['id'], ['_controller' => 'App\\Controller\\PartenaireController::update'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/super/partenaire']], [], []],
     'listpartenaire' => [[], ['_controller' => 'App\\Controller\\PartenaireController::listParten'], [], [['text', '/api/super/listParten']], [], []],
+    'compte' => [[], ['_controller' => 'App\\Controller\\PartenaireController::Compte'], [], [['text', '/api/super/compte']], [], []],
     'login' => [[], ['_controller' => 'App\\Controller\\UtilisateurController::login'], [], [['text', '/api/login']], [], []],
     'register' => [[], ['_controller' => 'App\\Controller\\UtilisateurController::register'], [], [['text', '/api/utilisateur']], [], []],
     'utilisaUpdate' => [['id'], ['_controller' => 'App\\Controller\\UtilisateurController::updat'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/utilisateur']], [], []],

@@ -2767,6 +2767,13 @@
       <call method="add">
         <argument type="service" id=".security.request_matcher.gbc0kuu"/>
         <argument type="collection">
+          <argument>ROLE_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.gbc0kuu"/>
+        <argument type="collection">
           <argument>ROLE_SUPER_ADMIN</argument>
         </argument>
         <argument>null</argument>

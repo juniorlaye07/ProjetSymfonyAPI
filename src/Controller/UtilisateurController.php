@@ -12,10 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -45,22 +43,11 @@ class UtilisateurController extends AbstractController
 
         $values = json_decode($request->getContent());
         $profil = "";
-        if (isset($values->username, $values->password)) {
+        if (!empty($values->username)&& !empty($values->password)&& (strlen($values->password)<8)&& !empty($values->nom)&& !empty($values->prenom)&&
+        !empty($values->tel)&& (strlen($values->tel)==9)&& !empty($values->status)){
             $user = new Utilisateur();
-            $password = getEncryptedPassword();
-            $passwordConfirmation = getEncryptedPassword();
-            $errors = [];
-            if ($password != $passwordConfirmation) {
-                $errors[] = "Password does not match the password confirmation.";
-            }
-            if (strlen($password) < 8) {
-                $errors[] = "Password should be at least 8 characters.";
-            }
-            if (!$errors) {
                 $user->setUsername($values->username);
                 $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            }
-
             $profil = $values->profil;
             switch ($profil) {
                 case 1:
@@ -84,7 +71,7 @@ class UtilisateurController extends AbstractController
                 default:
                     $data = [
                         'statuts' => 400,
-                        'message' => 'Ce profil n\'existe pas'
+                        'message' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
                     ];
                     return new JsonResponse($data, 400);
             }
@@ -97,13 +84,13 @@ class UtilisateurController extends AbstractController
 
             $data = [
                 'statuts' => 201,
-                'message' => 'L\'utilisateur a été créé'
+                'message' => 'L\'utilisateur a été bien enregistrer!'
             ];
             return new JsonResponse($data, 201);
         }
         $data = [
             'statut' => 500,
-            'messag' => 'Vous devez renseigner les champs manquats'
+            'messag' => 'Veillez bien vérifier les informations saisis!'
         ];
         return new JsonResponse($data, 500);
     }
