@@ -21,6 +21,7 @@ return [
     'listpartenaire' => [[], ['_controller' => 'App\\Controller\\PartenaireController::listParten'], [], [['text', '/api/super/listParten']], [], []],
     'compte' => [[], ['_controller' => 'App\\Controller\\PartenaireController::Compte'], [], [['text', '/api/super/compte']], [], []],
     'login' => [[], ['_controller' => 'App\\Controller\\UtilisateurController::login'], [], [['text', '/api/login']], [], []],
+    'form' => [[], ['_controller' => 'App\\Controller\\UtilisateurController::addUtilisateur'], [], [['text', '/api/form']], [], []],
     'register' => [[], ['_controller' => 'App\\Controller\\UtilisateurController::register'], [], [['text', '/api/utilisateur']], [], []],
     'utilisaUpdate' => [['id'], ['_controller' => 'App\\Controller\\UtilisateurController::updat'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/utilisateur']], [], []],
     'api_entrypoint' => [['index', '_format'], ['_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index' => 'index'], [['variable', '.', '[^/]++', '_format', true], ['variable', '/', 'index', 'index', true], ['text', '/api']], [], []],

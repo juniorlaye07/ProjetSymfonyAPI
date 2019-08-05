@@ -24,7 +24,7 @@ security:
                failure_handler:      lexik_jwt_authentication.handler.authentication_failure
         api:
             http_basic : ~
-            pattern:   ^/api/
+            pattern:   ^/api/f/
             stateless: true
             guard:
                 authenticators:
@@ -41,6 +41,7 @@ security:
     access_control:
        
         - { path: ^/api/utilisateur,             roles: ROLE_ADMIN }
+        #- { path: ^/api/form,                    roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/utilisateur,             roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/super/partenaire,        roles: ROLE_SUPER_ADMIN }
         - { path: ^/api/caisier/,                roles: ROLE_CAISIER }

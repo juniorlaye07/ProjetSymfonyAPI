@@ -2,26 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Utilisateur;
 use App\Entity\Partenaire;
+use App\Entity\Utilisateur;
+use App\Form\UtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/api")
  */
 class UtilisateurController extends AbstractController
 {
-    //=============================Login====================================£=========================================================================================//
+//=============================Login====================================£=========================================================================================//
     /**
      * @Route("/login", name="login", methods={"POST"})
      */
@@ -34,7 +35,39 @@ class UtilisateurController extends AbstractController
             'username' => $user->getUsername()
         ]);
     }
-    //====================Ajouter utilisateur==================================£========================================================================================================================£
+    /**
+     * @Route("/form", name="form", methods={"POST","GET"})
+     */
+    public function addUtilisateur(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer, ValidatorInterface $validator){
+        $user = new Utilisateur();
+        $form = $this->createForm(UtilisateurType::class, $user);
+        $form->handleRequest($request);
+        $Values = $request->request->all();
+        $form->submit($Values);
+        $Files = $request->files->all()['imageName'];
+
+        $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+        $user->setRoles(["ROLE_SUPER_ADMIN"]);
+        $user->setImageFile($Files);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        
+        $errors = $validator->validate($user);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        $data = [
+            'stat' => 201,
+            'massage' => 'L"utilisateur été bien ajouté'
+        ];
+        return new JsonResponse($data, 201);
+    }
+//====================Ajouter utilisateur==================================£========================================================================================================================£
     /**
      * @Route("/utilisateur", name="register", methods={"POST"})
      */

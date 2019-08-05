@@ -30,6 +30,10 @@ class ComposerStaticInit1ea569f170fc038adf5d0cf7240af3bf
         array (
             'Webmozart\\Assert\\' => 17,
         ),
+        'V' => 
+        array (
+            'Vich\\UploaderBundle\\' => 20,
+        ),
         'T' => 
         array (
             'Twig\\' => 5,
@@ -108,6 +112,10 @@ class ComposerStaticInit1ea569f170fc038adf5d0cf7240af3bf
             'Negotiation\\' => 12,
             'Namshi\\JOSE\\' => 12,
         ),
+        'M' => 
+        array (
+            'Metadata\\' => 9,
+        ),
         'L' => 
         array (
             'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 37,
@@ -162,6 +170,10 @@ class ComposerStaticInit1ea569f170fc038adf5d0cf7240af3bf
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Vich\\UploaderBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vich/uploader-bundle',
         ),
         'Twig\\' => 
         array (
@@ -427,6 +439,10 @@ class ComposerStaticInit1ea569f170fc038adf5d0cf7240af3bf
         array (
             0 => __DIR__ . '/..' . '/namshi/jose/src/Namshi/JOSE',
         ),
+        'Metadata\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jms/metadata/src',
+        ),
         'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/lexik/jwt-authentication-bundle',
@@ -540,6 +556,13 @@ class ComposerStaticInit1ea569f170fc038adf5d0cf7240af3bf
             'JsonpCallbackValidator' => 
             array (
                 0 => __DIR__ . '/..' . '/willdurand/jsonp-callback-validator/src',
+            ),
+        ),
+        'B' => 
+        array (
+            'Behat\\Transliterator' => 
+            array (
+                0 => __DIR__ . '/..' . '/behat/transliterator/src',
             ),
         ),
     );
