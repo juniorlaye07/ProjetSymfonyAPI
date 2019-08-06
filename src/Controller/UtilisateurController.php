@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -38,7 +40,6 @@ class UtilisateurController extends AbstractController
      */
     public function addUtilisateur(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer, ValidatorInterface $validator){
         $user = new Utilisateur();
-        $parten=new Partenaire();
         $form = $this->createForm(UtilisateurType::class, $user);
         $form->handleRequest($request);
         $Values = $request->request->all();
@@ -46,9 +47,8 @@ class UtilisateurController extends AbstractController
         $Files = $request->files->all()['imageName'];
 
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-        
+        $user->setRoles(["ROLE_USER"]);
         $user->setImageFile($Files);
-        $user->setPartenaire($parten);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);

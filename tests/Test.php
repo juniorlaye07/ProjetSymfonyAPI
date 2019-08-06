@@ -32,7 +32,7 @@ class Test extends WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatuscode());
     }  */
 //============================Teste Creation de Comptbank===========================================================================================================================================//
-   /*  public function testaddTRUE()
+  /*  public function testaddTRUE()
     {
 
         $client = static::createClient(
@@ -49,26 +49,26 @@ class Test extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             '{
-                "ninea":"BNV849",
-                "raisonSocial":"Service SA",
-                "telephone":"338954625",
+                "ninea":"YFVJ6141",
+                "raison_social":"Service SA",
+                "tel":"338954625",
                 "adresse":"Keur massar",
                 "email":"serviceSa@gmail",
-                "statut":"Actif",
+                "status":"Actif",
                 "username":"alisson",
                 "password":"alisson",
                 "nom":"Fall",
                 "prenom":"Sokhna",
                 "tel":"777941094",
                 "status":"Actif",
-                "profil":["ROLE_ADMIN"],
-                "solde" :"0"                  
+                "solde" :"0" ,
+                "imageFile":"Api1.jpeg"              
             }'
         );
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
-    } */
+    }  */
 //========================Test Depot Argent=======================£====================================================================// 
    /*   public function testFaireDepotTRUE()
     {
@@ -98,7 +98,7 @@ class Test extends WebTestCase
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
     }  */
-    public function testFaireDepotFALSE()
+/*     public function testFaireDepotFALSE()
     {
 
         $client = static::createClient(
@@ -125,9 +125,9 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-    }
+    } */
 //==================================Test Créer un compte============================================================================================// 
-    public function testnewTRUE()
+   /*  public function testnewTRUE()
     {
 
         $client = static::createClient(
@@ -151,6 +151,6 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
-    }
+    } */
 
 }
