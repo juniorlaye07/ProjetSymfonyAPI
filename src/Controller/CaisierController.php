@@ -46,7 +46,6 @@ class CaisierController extends AbstractController
 
 
                 $numCompte = $repo->findOneBy(['numero_compte' => $values->numeroCompte]);
-
                 $depo->setNumeroCompte($numCompte);
 
                 $numCompte->setSolde($numCompte->getSolde() + $values->montant);

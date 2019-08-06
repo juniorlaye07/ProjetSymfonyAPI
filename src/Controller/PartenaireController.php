@@ -5,59 +5,60 @@ namespace App\Controller;
 use App\Entity\Compte;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
+use App\Form\PartenaireType;
+use App\Form\UtilisateurType;
 use App\Repository\PartenaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/api/super")
  */
 class PartenaireController extends AbstractController
 {
-    //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
+//=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("/partenaire", name="partenaire", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
-        $values = json_decode($request->getContent());
-        if (!empty($values->ninea)&& !empty($values->raisonSocial)&& !empty($values->username)&& !empty($values->password)&&
-        !empty($values->nom)&& !empty($values->prenom)&& !empty($values->tel)&& !empty($values->status)&& is_numeric($values->tel)&&
-        is_numeric ($values->telephone)&& (strlen($values->telephone)==9)&& (strlen($values->tel)==9))
-        {
-//=================================>l'administrateur du préstataire<=======================£================================================================//
+//===========================================>Enregistrer un Prestataire<=====================================£==============================================================//
+            $parten = new Partenaire();
+
+            $form = $this->createForm(PartenaireType::class, $parten);
+            $form->handleRequest($request);
+            $Values = $request->request->all();
+            $form->submit($Values);
+          
+            $entityManager->persist($parten);
+            $entityManager->flush();
+           
+ //=================================>l'administrateur du préstataire<=======================£================================================================//
             $user = new Utilisateur();
-            $user->setUsername($values->username);
-            $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
+            $form = $this->createForm(UtilisateurType::class, $user);
+            $form->handleRequest($request);
+            $Values = $request->request->all();
+            $form->submit($Values);
+            $Files = $request->files->all()['imageName'];
 
-            $profil = $values->profil;
-            if ($profil == ['ROLE_ADMIN']) {
-                $user->setRoles($profil);
-            } else {
-                $data = [
-                    'stat' => 400,
-                    'mesg' => 'Ce profil n\'existe pas'
-                ];
-                return new JsonResponse($data, 400);
-            }
-            $user->setNom($values->nom);
-            $user->setPrenom($values->prenom);
-            $user->setTel($values->tel);
-            $user->setStatus($values->status);
+            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+            $user->setRoles(["ROLE_ADMIN"]);
+            $user->setImageFile($Files);
+            $user->setPartenaire($parten);
 
-
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
 //=======================================>le compte associe au préstataire<====================================£==============================================================//
             $comptebank = new Compte();
             $code = "";
@@ -70,23 +71,10 @@ class PartenaireController extends AbstractController
             $code = ($annee . $mois . $jour . $heure . $minutes . $seconde);
 
             $comptebank->setNumeroCompte($code);
-            $comptebank->setSolde($values->solde);
+            $comptebank->setSolde('0');
+            $comptebank->setPartenaire($parten);
 
             $entityManager->persist($comptebank);
-            $entityManager->flush();
-//===========================================>Enregistrer un Prestataire<=====================================£==============================================================//
-            $parten = new Partenaire();
-
-            $parten->setNinea($values->ninea);
-            $parten->setAdresse($values->adresse);
-            $parten->setRaisonSocial($values->raisonSocial);
-            $parten->setEmail($values->email);
-            $parten->setTel($values->telephone);
-            $parten->setStatus($values->statut);
-            $parten->addUtilisateur($user);
-            $parten->addCompte($comptebank);
-
-            $entityManager->persist($parten);
             $entityManager->flush();
 
             $data = [
@@ -94,14 +82,7 @@ class PartenaireController extends AbstractController
                 'message' => 'Le prestataire a été bien créé!'
             ];
             return new JsonResponse($data, 201);
-        }
-        $data = [
-            'statu' => 500,
-            'mesag' => 'Veillez renseignez les champs avec des infos valides!'
-        ];
-        return new JsonResponse($data, 500);
     }
-
     //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("/partenaire/{id}", name="updatparten", methods={"PUT"})
@@ -153,7 +134,7 @@ class PartenaireController extends AbstractController
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());
-        if (!empty($values->partenaire)) {
+        if (!empty($values->ninea)) {
         
         $comptebank = new Compte();
         $code = "";
@@ -168,7 +149,7 @@ class PartenaireController extends AbstractController
         $comptebank->setNumeroCompte($code);
         $comptebank->setSolde('0');
         $repo = $this->getDoctrine()->getRepository(Partenaire::class);
-        $parten = $repo->find($values->partenaire);
+        $parten = $repo->findOneBy(['ninea' => $values->ninea]);
         $comptebank->setPartenaire($parten);
 
         $entityManager->persist($comptebank);

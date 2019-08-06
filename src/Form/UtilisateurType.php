@@ -37,8 +37,9 @@ class UtilisateurType extends AbstractType
             ->add('prenom')
             ->add('tel')
             ->add('status')
+            ->add('[roles]')
             ->add('imageFile',VichImageType::class)
-            ->add('partenaire',EntityType::class,['class'=>Partenaire::class])
+           
         ;
     }
     public function configureOptions(OptionsResolver $resolver)

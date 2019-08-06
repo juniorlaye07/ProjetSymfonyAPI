@@ -49,19 +49,19 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $tel;
 
@@ -258,7 +258,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-
     /**
      * @return Collection|Depot[]
      */
@@ -302,4 +301,27 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+    /**
+     * Get the value of updatedAt
+     *
+     * @return  \DateTime
+     */ 
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set the value of updatedAt
+     *
+     * @param  \DateTime  $updatedAt
+     *
+     * @return  self
+     */ 
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
 }

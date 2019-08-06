@@ -13,6 +13,7 @@ return [
         '/api/super/listParten' => [[['_route' => 'listpartenaire', '_controller' => 'App\\Controller\\PartenaireController::listParten'], null, ['GET' => 0], null, false, false, null]],
         '/api/super/compte' => [[['_route' => 'compte', '_controller' => 'App\\Controller\\PartenaireController::Compte'], null, ['POST' => 0], null, false, false, null]],
         '/api/login' => [[['_route' => 'login', '_controller' => 'App\\Controller\\UtilisateurController::login'], null, ['POST' => 0], null, false, false, null]],
+        '/api/form' => [[['_route' => 'form', '_controller' => 'App\\Controller\\UtilisateurController::addUtilisateur'], null, ['POST' => 0, 'GET' => 1], null, false, false, null]],
         '/api/utilisateur' => [[['_route' => 'register', '_controller' => 'App\\Controller\\UtilisateurController::register'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList

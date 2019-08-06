@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class Test extends WebTestCase
 {
     //========================================================Teste lister Partenaire==============================================================================//
-    public function testlistPartenTRUE()
+   /*  public function testlistPartenTRUE()
     {
         $client = static::createClient(
             [],
@@ -19,7 +19,7 @@ class Test extends WebTestCase
         $crawler = $client->request('GET', '/api/super/listParten');
         $jsonstring = "[
                  {
-                    \"id\":19,
+                    \"id\":5,
                     \"ninea\":\"ANG2849\",
                     \"raisonSocial\":\"Merline SA\",
                     \"adresse\":\"Mermouz\",
@@ -30,9 +30,9 @@ class Test extends WebTestCase
              ]";
         $rep = $client->getResponse();
         $this->assertSame(200, $client->getResponse()->getStatuscode());
-    } 
-    //============================Teste Creation de Comptbank===========================================================================================================================================//
-    public function testaddTRUE()
+    }  */
+//============================Teste Creation de Comptbank===========================================================================================================================================//
+   /*  public function testaddTRUE()
     {
 
         $client = static::createClient(
@@ -68,9 +68,8 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
-    }
- 
-    //========================Test Depot Argent=======================£====================================================================// 
+    } */
+//========================Test Depot Argent=======================£====================================================================// 
    /*   public function testFaireDepotTRUE()
     {
 
@@ -116,9 +115,9 @@ class Test extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             '{
-                "montant": "2500",
-                "caisier": "10",
-                "numeroCompte": "20190805142900"
+                "montant":"",
+                "caisier":"19",
+                "numeroCompte":"20190806142743"
                 
   
             }'
@@ -126,7 +125,8 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(400, $client->getResponse()->getStatusCode());
-    } 
+    }
+//==================================Test Créer un compte============================================================================================// 
     public function testnewTRUE()
     {
 
@@ -144,8 +144,8 @@ class Test extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             '{
-                "partenaire":"2",
-                "solde" :"0"                  
+                
+                "ninea":"ABD282539"                
             }'
         );
         $repo = $client->getResponse();
