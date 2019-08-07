@@ -12,8 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -47,7 +45,7 @@ class UtilisateurController extends AbstractController
         $Files = $request->files->all()['imageName'];
 
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-        $user->setRoles(["ROLE_USER"]);
+        $user->setRoles(["ROLE_ADMIN"]);
         $user->setImageFile($Files);
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -63,7 +61,7 @@ class UtilisateurController extends AbstractController
         }
         $data = [
             'stat' => 201,
-            'massage' => 'L"utilisateur été bien ajouté'
+            'massage' => 'Votre utilisateur a été bien enregistrer'
         ];
         return new JsonResponse($data, 201);
     }
