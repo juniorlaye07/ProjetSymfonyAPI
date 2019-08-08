@@ -27,8 +27,6 @@ class Compte
      */
     private $numero_compte;
 
-   
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="numero_compte")
      */
