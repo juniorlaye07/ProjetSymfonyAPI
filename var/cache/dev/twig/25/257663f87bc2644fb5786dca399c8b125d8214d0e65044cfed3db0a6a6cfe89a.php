@@ -154,6 +154,6 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
     </ul>
 </div>
 {% endblock %}
-", "partenaire/index.html.twig", "/home/juniorlaye/APIprojet/templates/partenaire/index.html.twig");
+", "partenaire/index.html.twig", "/home/juniorlaye/Bureau/testapi/templates/partenaire/index.html.twig");
     }
 }

@@ -173,6 +173,6 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
         {% block javascripts %}{% endblock %}
     </body>
 </html>
-", "base.html.twig", "/home/juniorlaye/APIprojet/templates/base.html.twig");
+", "base.html.twig", "/home/juniorlaye/Bureau/testapi/templates/base.html.twig");
     }
 }

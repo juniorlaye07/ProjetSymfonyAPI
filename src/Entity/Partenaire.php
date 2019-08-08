@@ -46,15 +46,13 @@ class Partenaire
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Veillez bien renseigner les champs")
+     * @Assert\Regex(
+     *     pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
+     *     match=true,
+     *     message="Votre numero de téléphone ne doit pas contenir de lettres"
+     * )
      */
     private $tel;
-
-    
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire")
@@ -134,21 +132,6 @@ class Partenaire
     public function setTel(string $tel): self
     {
         $this->tel = $tel;
-
-        return $this;
-    }
-
-    
-
-   
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }

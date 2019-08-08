@@ -823,6 +823,6 @@ $context["answer"] === false)) {
         </div>
     {% endif %}
 {% endblock %}
-", "@ApiPlatform/DataCollector/request.html.twig", "/home/juniorlaye/APIprojet/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
+", "@ApiPlatform/DataCollector/request.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
     }
 }

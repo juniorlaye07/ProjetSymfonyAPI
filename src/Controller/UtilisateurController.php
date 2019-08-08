@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UtilisateurController extends AbstractController
 {
-//=============================Login====================================£=========================================================================================//
+//===================================================>Login<==============================£===============================================================================================//
     /**
      * @Route("/login", name="login", methods={"POST"})
      */
@@ -33,6 +33,7 @@ class UtilisateurController extends AbstractController
             'username' => $user->getUsername()
         ]);
     }
+//=====================================>Formulaire d'ajout Utilisateur<=================£==============================================================================//
     /**
      * @Route("/form", name="form", methods={"POST","GET"})
      */
@@ -43,11 +44,31 @@ class UtilisateurController extends AbstractController
         $Values = $request->request->all();
         $form->submit($Values);
         $Files = $request->files->all()['imageName'];
-
-        $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-        $user->setRoles(["ROLE_ADMIN"]);
         $user->setImageFile($Files);
-
+        $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+       
+        $profil = $Values['profil'];
+        switch ($profil) {
+            case 1:
+                $user->setRoles(['ROLE_ADMIN_SYSTEME']);
+                break;
+            case 2:
+                $user->setRoles(['ROLE_CAISIER']);
+                break;
+            case 3:
+                $user->setRoles(['ROLE_ADMIN_PRESTA']);
+                break;
+            case 4:
+                $user->setRoles(['ROLE_USER']);
+                break;
+            default:
+                $data = [
+                    'stat' => 400,
+                    'messge' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
+                ];
+                return new JsonResponse($data, 400);
+        }
+       
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -65,67 +86,7 @@ class UtilisateurController extends AbstractController
         ];
         return new JsonResponse($data, 201);
     }
-//====================Ajouter utilisateur==================================£========================================================================================================================£
-    /**
-     * @Route("/utilisateur", name="register", methods={"POST"})
-     */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, ValidatorInterface $validator)
-    {
-
-        $values = json_decode($request->getContent());
-        $profil = "";
-        if (!empty($values->username)&& !empty($values->password)&& (strlen($values->password)<8)&& !empty($values->nom)&& !empty($values->prenom)&&
-        !empty($values->tel)&& (strlen($values->tel)==9)&& !empty($values->status)){
-            $user = new Utilisateur();
-                $user->setUsername($values->username);
-                $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $profil = $values->profil;
-            switch ($profil) {
-                case 1:
-                    $user->setRoles(['ROLE_ADMIN']);
-                    $user->setStatus($values->status);
-                    $repo = $this->getDoctrine()->getRepository(Partenaire::class);
-                    $parten = $repo->find($values->partenaire);
-                    $user->setPartenaire($parten);
-                    break;
-                case 2:
-                    $user->setRoles(['ROLE_CAISIER']);
-                    $user->setStatus($values->status);
-                    break;
-                case 3:
-                    $user->setRoles(['ROLE_USER']);
-                    $user->setStatus($values->status);
-                    $repo = $this->getDoctrine()->getRepository(Partenaire::class);
-                    $parten = $repo->find($values->partenaire);
-                    $user->setPartenaire($parten);
-                    break;
-                default:
-                    $data = [
-                        'statuts' => 400,
-                        'message' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
-                    ];
-                    return new JsonResponse($data, 400);
-            }
-            $user->setNom($values->nom);
-            $user->setPrenom($values->prenom);
-            $user->setTel($values->tel);
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $data = [
-                'statuts' => 201,
-                'message' => 'L\'utilisateur a été bien enregistrer!'
-            ];
-            return new JsonResponse($data, 201);
-        }
-        $data = [
-            'statut' => 500,
-            'messag' => 'Veillez bien vérifier les informations saisis!'
-        ];
-        return new JsonResponse($data, 500);
-    }
-    //========================bloquer utilisateur========================£===============================================================================================//
+//========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})
      */

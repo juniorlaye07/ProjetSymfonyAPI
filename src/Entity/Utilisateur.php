@@ -37,6 +37,12 @@ class Utilisateur implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Vous devez insérer un mot de passe")
+     * @Assert\Regex(
+     *     pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/",
+     *     match=true,
+     *     message="Votre mot de passe doit contenir au moins 8 caractères:un majuscule et un caractère spéciale"
+     * )
      */
     private $password;
     /**
@@ -62,6 +68,11 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Veillez bien renseigner les champs")
+     * @Assert\Regex(
+     *     pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
+     *     match=true,
+     *     message="Votre numero de téléphone ne doit pas contenir de lettres"
+     * )
      */
     private $tel;
 
@@ -85,6 +96,14 @@ class Utilisateur implements UserInterface
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      * 
      * @Vich\UploadableField(mapping="utilisateur", fileNameProperty="imageName")
+     * @Assert\File(
+     *     maxSize = "5M",
+     *     mimeTypes = {
+     *         "image/jpeg",
+     *         "image/pjpeg",
+     *         "image/png",
+     *     },
+     * mimeTypesMessage = "Veuillez saisir un format d\'image valide")
      * 
      * @var File
      */
@@ -168,8 +187,8 @@ class Utilisateur implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
+        /* $roles[] = 'ROLE_USER';
+ */
         return array_unique($roles);
     }
 

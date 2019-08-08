@@ -32,7 +32,7 @@ class Test extends WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatuscode());
     }  */
 //============================Teste Creation de Comptbank===========================================================================================================================================//
-  /*  public function testaddTRUE()
+   public function testaddTRUE()
     {
 
         $client = static::createClient(
@@ -68,7 +68,7 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
-    }  */
+    }  
 //========================Test Depot Argent=======================£====================================================================// 
    /*   public function testFaireDepotTRUE()
     {
@@ -127,7 +127,7 @@ class Test extends WebTestCase
         $this->assertSame(400, $client->getResponse()->getStatusCode());
     } */
 //==================================Test Créer un compte============================================================================================// 
-   /*  public function testnewTRUE()
+/*    public function testnewTRUE()
     {
 
         $client = static::createClient(
@@ -151,6 +151,6 @@ class Test extends WebTestCase
         $repo = $client->getResponse();
         var_dump($repo);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
-    } */
+    }  */
 
 }

@@ -27,9 +27,9 @@ class PartenaireController extends AbstractController
 //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("/partenaire", name="partenaire", methods={"POST"})
-     * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
+     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
      */
-    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
+    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
 //===========================================>Enregistrer un Prestataire<=====================================£==============================================================//
             $parten = new Partenaire();
@@ -51,10 +51,17 @@ class PartenaireController extends AbstractController
             $Files = $request->files->all()['imageName'];
 
             $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-            $user->setRoles(["ROLE_ADMIN"]);
+            $user->setRoles(["ROLE_SUPER_ADMIN_PRESTA"]);
             $user->setImageFile($Files);
             $user->setPartenaire($parten);
 
+        $errors = $validator->validate($user);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Typ' => 'applicatio/json'
+            ]);
+        }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -83,10 +90,10 @@ class PartenaireController extends AbstractController
             ];
             return new JsonResponse($data, 201);
     }
-    //=============================================>Bloquer un partenaire<========================£======================================================================================================//
+//=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("/partenaire/{id}", name="updatparten", methods={"PUT"})
-     * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
+     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -116,7 +123,7 @@ class PartenaireController extends AbstractController
 //========================================>Lister les Partenaires<============================£========================================================================//
     /**
      * @Route("/listParten", name="listpartenaire", methods={"GET"})
-     * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
+     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
      */
     public function listParten(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
@@ -127,9 +134,10 @@ class PartenaireController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
+//==============================================>Créer un compte Partenaire<=================================================================//
     /**
      * @Route("/compte", name="compte", methods={"POST"})
-     * @IsGranted("ROLE_SUPER_ADMIN",message="Acces Refusé !")
+     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_CQISIER",message="Acces Refusé !")
      */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {
