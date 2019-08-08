@@ -124,6 +124,11 @@ class Utilisateur implements UserInterface
     private $updatedAt;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numero_compte;
+
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -186,9 +191,7 @@ class Utilisateur implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        /* $roles[] = 'ROLE_USER';
- */
+       
         return array_unique($roles);
     }
 
@@ -340,6 +343,18 @@ class Utilisateur implements UserInterface
     public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getNumeroCompte(): ?string
+    {
+        return $this->numero_compte;
+    }
+
+    public function setNumeroCompte(?string $numero_compte): self
+    {
+        $this->numero_compte = $numero_compte;
 
         return $this;
     }

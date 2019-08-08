@@ -6,6 +6,7 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
     $o = [
         clone (($p = &Registry::$prototypes)['Doctrine\\ORM\\Mapping\\Column'] ?? Registry::p('Doctrine\\ORM\\Mapping\\Column')),
         clone ($p['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Regex'] ?? Registry::p('Symfony\\Component\\Validator\\Constraints\\Regex')),
     ],
     null,
     [
@@ -15,17 +16,25 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
             ],
             'message' => [
                 1 => 'Veillez bien renseigner les champs',
+                'Votre numero de téléphone ne doit pas contenir de lettres',
             ],
             'groups' => [
                 1 => [
                     'Default',
                 ],
+                [
+                    'Default',
+                ],
+            ],
+            'pattern' => [
+                2 => '/^(\\+[1-9][0-9]*(\\([0-9]*\\)|-[0-9]*-))?[0]?[1-9][0-9\\-]*$/',
             ],
         ],
     ],
     [
         $o[0],
         $o[1],
+        $o[2],
     ],
     []
 );

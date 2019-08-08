@@ -40,10 +40,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
        
-        - { path: ^/api/form,                    roles: ROLE_SUPER_ADMIN_PRESTA }
-        - { path: ^/api/form,                    roles: ROLE_SUPER_ADMIN_SYSTEME }
-        - { path: ^/api/form,                    roles: ROLE_ADMIN_PRESTA }
-        - { path: ^/api/super/partenaire,        roles: ROLE_SUPER_ADMIN_SYSTEME }
+        #- { path: ^/api/form,                    roles: ROLE_SUPER_ADMINSYSTEME ,ROLE_SUPER_ADMIN_PRESTA ,ROLE_ADMIN_PRESTA}
+        - { path: ^/api/super/partenaire,        roles: ROLE_SUPER_ADMINSYSTEME }
         - { path: ^/api/caisier/,                roles: ROLE_CAISIER }
         - { path: ^/api/login,                   roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/,                        roles: IS_AUTHENTICATED_FULLY }

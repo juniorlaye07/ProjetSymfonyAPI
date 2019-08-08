@@ -27,7 +27,7 @@ class PartenaireController extends AbstractController
 //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("/partenaire", name="partenaire", methods={"POST"})
-     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
@@ -41,7 +41,24 @@ class PartenaireController extends AbstractController
           
             $entityManager->persist($parten);
             $entityManager->flush();
-           
+//=======================================>le compte associe au préstataire<====================================£==============================================================//
+        $comptebank = new Compte();
+        $code = "";
+        $jour = date('d');
+        $mois = date('m');
+        $annee = date('Y');
+        $heure = date('H');
+        $minutes = date('i');
+        $seconde = date('s');
+        $code = ($annee . $mois . $jour . $heure . $minutes . $seconde);
+
+        $comptebank->setNumeroCompte($code);
+        $comptebank->setSolde('0');
+        $comptebank->setPartenaire($parten);
+
+        $entityManager->persist($comptebank);
+        $entityManager->flush();
+
  //=================================>l'administrateur du préstataire<=======================£================================================================//
             $user = new Utilisateur();
             $form = $this->createForm(UtilisateurType::class, $user);
@@ -54,6 +71,7 @@ class PartenaireController extends AbstractController
             $user->setRoles(["ROLE_SUPER_ADMIN_PRESTA"]);
             $user->setImageFile($Files);
             $user->setPartenaire($parten);
+            $user->setNumeroCompte($code);
 
         $errors = $validator->validate($user);
         if (count($errors)) {
@@ -65,35 +83,17 @@ class PartenaireController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+        $data = [
+            'statuts' => 201,
+            'message' => 'Le prestataire a été bien créé!'
+        ];
+        return new JsonResponse($data, 201);
 
-//=======================================>le compte associe au préstataire<====================================£==============================================================//
-            $comptebank = new Compte();
-            $code = "";
-            $jour = date('d');
-            $mois = date('m');
-            $annee = date('Y');
-            $heure = date('H');
-            $minutes = date('i');
-            $seconde = date('s');
-            $code = ($annee . $mois . $jour . $heure . $minutes . $seconde);
-
-            $comptebank->setNumeroCompte($code);
-            $comptebank->setSolde('0');
-            $comptebank->setPartenaire($parten);
-
-            $entityManager->persist($comptebank);
-            $entityManager->flush();
-
-            $data = [
-                'statuts' => 201,
-                'message' => 'Le prestataire a été bien créé!'
-            ];
-            return new JsonResponse($data, 201);
     }
 //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("/partenaire/{id}", name="updatparten", methods={"PUT"})
-     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -123,7 +123,7 @@ class PartenaireController extends AbstractController
 //========================================>Lister les Partenaires<============================£========================================================================//
     /**
      * @Route("/listParten", name="listpartenaire", methods={"GET"})
-     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME",message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
      */
     public function listParten(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
@@ -137,7 +137,7 @@ class PartenaireController extends AbstractController
 //==============================================>Créer un compte Partenaire<=================================================================//
     /**
      * @Route("/compte", name="compte", methods={"POST"})
-     * @IsGranted("ROLE_SUPER_ADMIN_SYSTEME","ROLE_CQISIER",message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_CAISIER"},message="Acces Refusé !")
      */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {

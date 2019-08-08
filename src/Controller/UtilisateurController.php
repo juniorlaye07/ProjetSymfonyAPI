@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -33,9 +34,10 @@ class UtilisateurController extends AbstractController
             'username' => $user->getUsername()
         ]);
     }
-//=====================================>Formulaire d'ajout Utilisateur<=================£==============================================================================//
+    //=====================================>Formulaire d'ajout Utilisateur<=================£==============================================================================//
     /**
      * @Route("/form", name="form", methods={"POST","GET"})
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMIN_PRESTA"},message="Acces Refusé !")
      */
     public function addUtilisateur(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer, ValidatorInterface $validator){
         $user = new Utilisateur();
@@ -46,6 +48,8 @@ class UtilisateurController extends AbstractController
         $Files = $request->files->all()['imageName'];
         $user->setImageFile($Files);
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+        $parten = $this->getUtilisateur()->getPartenaire();
+        var_dump($parten);
        
         $profil = $Values['profil'];
         switch ($profil) {
@@ -60,6 +64,7 @@ class UtilisateurController extends AbstractController
                 break;
             case 4:
                 $user->setRoles(['ROLE_USER']);
+               
                 break;
             default:
                 $data = [
@@ -77,7 +82,7 @@ class UtilisateurController extends AbstractController
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
             return new Response($errors, 500, [
-                'Content-Type' => 'application/json'
+                'Content-Typ' => 'applicatio/json'
             ]);
         }
         $data = [
@@ -115,5 +120,41 @@ class UtilisateurController extends AbstractController
         ];
         return new JsonResponse($data);
     }
+
+    /**
+     * @Route("/alocution/{id}", name="Update", methods={"PUT"})
+     */
+    public function alouerCompte(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    {
+        $parten = $this->getUser()->getPartenaire();
+        $compt = $parten->getComptes();
+        $numero = $compt[0]->getNumeroCompte();
+        var_dump($numero);
+        die();
+        $compteUpdate = $entityManager->getRepository(Utilisateur::class)->find($user->getId());
+       
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $values) {
+            if ($key && !empty($values)) {
+                $status = ucfirst($key);
+                $setter = 'set' . $status;
+                $compteUpdate->$setter($values);
+            }
+        }
+        $errors = $validator->validate($compteUpdate);
+        if (count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        $entityManager->flush();
+        $data = [
+            'statut' => 200,
+            'messag' => 'Le statuts de l\'utilisateur a été mis à jour'
+        ];
+        return new JsonResponse($data);
+    }
     //============================================================================>Juniorlaye07<==========================================================================//
 }
+
