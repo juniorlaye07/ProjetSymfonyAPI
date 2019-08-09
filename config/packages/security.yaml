@@ -14,6 +14,11 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        main:
+            anonymous: ~
+            json_login: 
+                check_path: /api/login
+
         login:
             pattern:  ^/api/login
             stateless: true
@@ -40,9 +45,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
        
-        #- { path: ^/api/form,                    roles: ROLE_SUPER_ADMINSYSTEME ,ROLE_SUPER_ADMIN_PRESTA ,ROLE_ADMIN_PRESTA}
-        - { path: ^/api/super/partenaire,        roles: ROLE_SUPER_ADMINSYSTEME }
-        - { path: ^/api/caisier/,                roles: ROLE_CAISIER }
         - { path: ^/api/login,                   roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/,                        roles: IS_AUTHENTICATED_FULLY }
    

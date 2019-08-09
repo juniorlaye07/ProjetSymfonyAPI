@@ -27,11 +27,13 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
             'attributes' => [
                 1 => [
                     'ROLE_SUPER_ADMINSYSTEME',
-                    'ROLE_SUPER_ADMIN_PRESTA',
+                    'ROLE_SUPER_ADMINPRESTA',
+                    'ROLE_ADMINSYSTEME',
+                    'ROLE_ADMINPRESTA',
                 ],
             ],
             'message' => [
-                1 => 'Acces Refusé !',
+                1 => 'Acces Refusé !,veillez vous connecter en tant que super administrateur',
             ],
         ],
     ],

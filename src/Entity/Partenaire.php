@@ -29,11 +29,13 @@ class Partenaire
     private $ninea;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $raison_social;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $adresse;
 

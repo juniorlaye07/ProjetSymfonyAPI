@@ -14,30 +14,64 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+
 
 /**
  * @Route("/api")
  */
 class UtilisateurController extends AbstractController
 {
-//===================================================>Login<==============================£===============================================================================================//
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+    //===================================================>Login<==============================£===============================================================================================//
     /**
      * @Route("/login", name="login", methods={"POST"})
+     * @param Request $request
+     * @param JWTEncoderInterface $JWTEncoder
+     * @return JsonResponse
+     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
-    public function login(Request $request)
+    public function login(Request $request,JWTEncoderInterface $JWTEncoder)
     {
-        $user = $this->getUser();
-        return $this->json([
+        $values = json_decode($request->getContent());
+          $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
+          
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur introuvable');
+        }
 
-            'roles' => $user->getRoles(),
-            'username' => $user->getUsername()
+        $isValid = $this->passwordEncoder->isPasswordValid($user,$values->password);
+        if (!$isValid) 
+        {
+            throw new BadCredentialsException();
+        }
+        $user->getStatus();     
+        if ($user->getStatus()=='Bloquer') 
+        {
+            $data = [
+                'stat' => 400,
+                'messge' => 'Cette utilisateur est bloqué,veillez vous adressez à votre administrateur systeme!'
+            ];
+            return new JsonResponse($data, 400);
+        }
+        $token = $JWTEncoder->encode([
+            'username' => $user->getUsername(),
+            'exp' => time() + 3600 // 1 hour expiration
         ]);
+
+        return new JsonResponse(['token' => $token]);
     }
-    //=====================================>Formulaire d'ajout Utilisateur<=================£==============================================================================//
+//=====================================>Formulaire d'ajout Utilisateur<===================£==============================================================================//
     /**
      * @Route("/form", name="form", methods={"POST","GET"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMIN_PRESTA"},message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé !,veillez vous connecter en tant que super administrateur")
      */
     public function addUtilisateur(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer, ValidatorInterface $validator){
         $user = new Utilisateur();
@@ -48,23 +82,24 @@ class UtilisateurController extends AbstractController
         $Files = $request->files->all()['imageName'];
         $user->setImageFile($Files);
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-        $parten = $this->getUtilisateur()->getPartenaire();
-        var_dump($parten);
        
         $profil = $Values['profil'];
         switch ($profil) {
             case 1:
-                $user->setRoles(['ROLE_ADMIN_SYSTEME']);
+                $user->setRoles(['ROLE_ADMINSYSTEME']);
                 break;
             case 2:
                 $user->setRoles(['ROLE_CAISIER']);
                 break;
             case 3:
-                $user->setRoles(['ROLE_ADMIN_PRESTA']);
+                $user->setRoles(['ROLE_ADMINPRESTA']);
+                $parten = $this->getUser()->getPartenaire();
+                $user->setPartenaire($parten);
                 break;
             case 4:
                 $user->setRoles(['ROLE_USER']);
-               
+                $parten = $this->getUser()->getPartenaire();
+                $user->setPartenaire($parten);
                 break;
             default:
                 $data = [
@@ -73,7 +108,7 @@ class UtilisateurController extends AbstractController
                 ];
                 return new JsonResponse($data, 400);
         }
-       
+    
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -91,9 +126,10 @@ class UtilisateurController extends AbstractController
         ];
         return new JsonResponse($data, 201);
     }
-//========================Bloquer un utilisateur========================£===============================================================================================//
+    //========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
      */
     public function updat(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -120,28 +156,27 @@ class UtilisateurController extends AbstractController
         ];
         return new JsonResponse($data);
     }
-
+    //=========================================>Allouer un compte à User<=========================£============================================================================//
     /**
-     * @Route("/alocution/{id}", name="Update", methods={"PUT"})
+     * @Route("/UpdateCompte/{id}", name="Update", methods={"PUT"})
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
      */
     public function alouerCompte(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
         $parten = $this->getUser()->getPartenaire();
-        $compt = $parten->getComptes();
-        $numero = $compt[0]->getNumeroCompte();
-        var_dump($numero);
-        die();
-        $compteUpdate = $entityManager->getRepository(Utilisateur::class)->find($user->getId());
-       
-        $data = json_decode($request->getContent());
-        foreach ($data as $key => $values) {
-            if ($key && !empty($values)) {
-                $status = ucfirst($key);
-                $setter = 'set' . $status;
-                $compteUpdate->$setter($values);
+        $compte = $parten->getComptes();
+        $numero = $compte[0]->getNumeroCompte();
+        
+        foreach ($compte as $values)
+        {
+            if (!empty($values)&& $values->getNumeroCompte()!= $numero)
+            {
+               $numero_compte = $values->getNumeroCompte();
+               $user->setNumeroCompte($numero_compte);
             }
+            break;
         }
-        $errors = $validator->validate($compteUpdate);
+        $errors = $validator->validate($user);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
             return new Response($errors, 500, [
@@ -151,7 +186,7 @@ class UtilisateurController extends AbstractController
         $entityManager->flush();
         $data = [
             'statut' => 200,
-            'messag' => 'Le statuts de l\'utilisateur a été mis à jour'
+            'messag' =>'Un compte a été bien allouer à votre utilisateur'
         ];
         return new JsonResponse($data);
     }

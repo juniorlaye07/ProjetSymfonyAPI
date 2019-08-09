@@ -21,7 +21,7 @@ class UtilisateurFixtures extends Fixture
         $user->setUsername('juniorlaye07');
         $password = $this->encoder->encodePassword($user, 'junior07');
         $user->setPassword($password);
-        $user->setRoles(['ROLE_SUPER_ADMIN_SYSTEME']);
+        $user->setRoles(['ROLE_SUPER_ADMINSYSTEME']);
         $user->setPrenom('Abdoulaye');
         $user->setNom('Ngom');
         $user->setTel('776418887');

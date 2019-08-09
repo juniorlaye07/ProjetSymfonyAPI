@@ -27,7 +27,7 @@ class PartenaireController extends AbstractController
 //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("/partenaire", name="partenaire", methods={"POST"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
@@ -68,7 +68,7 @@ class PartenaireController extends AbstractController
             $Files = $request->files->all()['imageName'];
 
             $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-            $user->setRoles(["ROLE_SUPER_ADMIN_PRESTA"]);
+            $user->setRoles(["ROLE_SUPER_ADMINPRESTA"]);
             $user->setImageFile($Files);
             $user->setPartenaire($parten);
             $user->setNumeroCompte($code);
@@ -93,7 +93,7 @@ class PartenaireController extends AbstractController
 //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("/partenaire/{id}", name="updatparten", methods={"PUT"})
-     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -120,10 +120,10 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data);
     }
-//========================================>Lister les Partenaires<============================£========================================================================//
+    //========================================>Lister les Partenaires<============================£========================================================================//
     /**
      * @Route("/listParten", name="listpartenaire", methods={"GET"})
-     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_ADMIN_SYSTEME"},message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function listParten(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
@@ -134,10 +134,10 @@ class PartenaireController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
-//==============================================>Créer un compte Partenaire<=================================================================//
+    //==============================================>Créer un compte Partenaire<=================================================================//
     /**
      * @Route("/compte", name="compte", methods={"POST"})
-     * @IsGranted({"ROLE_SUPER_ADMIN_SYSTEME","ROLE_CAISIER"},message="Acces Refusé !")
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME","ROLE_CAISIER"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme ou caisier.")
      */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {

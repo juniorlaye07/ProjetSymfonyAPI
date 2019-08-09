@@ -27,7 +27,7 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
                 1 => 'ROLE_CAISIER',
             ],
             'message' => [
-                1 => 'Veillez vous connecter en tant que Caisier!',
+                1 => 'Accés Refusé!Veillez vous connecter en tant que Caisier!',
             ],
         ],
     ],

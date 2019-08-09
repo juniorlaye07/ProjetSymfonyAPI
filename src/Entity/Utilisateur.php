@@ -26,6 +26,7 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $username;
 
@@ -78,6 +79,7 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $status;
 

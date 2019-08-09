@@ -18,10 +18,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class CaisierController extends AbstractController
 {
-    //=============Faire un dépot d'argent===========================£================================================================//
+//=============Faire un dépot d'argent===========================£================================================================//
     /**
      * @Route("/depotcompte", name="depot", methods={"POST"})
-     *  @IsGranted("ROLE_CAISIER",message="Veillez vous connecter en tant que Caisier!")
+     *  @IsGranted("ROLE_CAISIER",message="Accés Refusé!Veillez vous connecter en tant que Caisier!")
      */
     public function FaireDepot(Request $request,  EntityManagerInterface $entityManager)
     {

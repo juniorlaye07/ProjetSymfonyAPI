@@ -25,12 +25,12 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
         'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted' => [
             'attributes' => [
                 1 => [
-                    'ROLE_SUPER_ADMIN_SYSTEME',
-                    'ROLE_ADMIN_SYSTEME',
+                    'ROLE_SUPER_ADMINSYSTEME',
+                    'ROLE_ADMINSYSTEME',
                 ],
             ],
             'message' => [
-                1 => 'Acces Refusé !',
+                1 => 'Acces Refusé! Veillez vous connecter en tant qu\'administrateur systeme.',
             ],
         ],
     ],
