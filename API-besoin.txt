@@ -1,0 +1,61 @@
+		
+                composer create-project symfony/skeleton                (creation de projet:1)
+				composer req api make (se positionner dans le projet:2)
+                composer require symfony/web-server-bundle --dev  (2)
+
+		composer require server (3)
+		composer require profiler(4)
+        composer require form annotations (10)
+
+			composer require orm (5)
+			composer require migrations (6)
+			composer require symfony/serializer (7)
+			composer require friendsofsymfony/rest-bundle (8)
+			composer require symfony/web-server-bundle --dev (9)
+			composer require --dev symfony/browser-kit symfony/css-selector (11)
+
+		composer require maker (12)
+		composer require serializer (13)
+		composer require --dev symfony/web-server-bundle (14)
+		composer require security (15)
+		composer req --dev symfony/browser-kit (17) 
+		composer req --dev symfony/css-selector (18)
+                
+		        composer require lexik/jwt-authentication-bundle (19)
+                composer require orm-fixtures --dev  (20)
+                composer require --dev doctrine/doctrine-fixtures-bundle (21)
+
+                composer req symfony/phpunit-bridge (22)
+
+=================Créer une fixtures==============================================================================================================================
+php bin/console make:fixtures (suivi du nom de la fixtures)
+
+===========================charger les fixtures==================================================================================================================
+php bin/console doctrine:fixtures:load
+
+============>pour effacer les caches de git<=====================================================================================================================
+1===>git rm -r --cached .
+2===>git add .
+3===>git commit -am 'git cache cleared'
+4===>git push "lien de ton depot git"
+
+NB: LES POINTS (.) FONT PARTI DES COMMANDES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=================================Ajout Git========================================================================================================================
+git init
+git remote add origin url......................
+git pull origin master
+===================================================================================================================================================================
+creation base donnée
+====================================================================================================================================================================
+php bin/console doctrine:migrations:version --add --all
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+
+=======================================Token========================================================================================================================
+mkdir -p config/jwt
+openssl genrsa -out config/jwt/private.pem -aes256 4096
+openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+
+=======================================lancer un test================================================================================================================
+php bin/phpunit
+
