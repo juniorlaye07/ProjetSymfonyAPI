@@ -798,6 +798,6 @@ class __TwigTemplate_717fbfa235ea876ce8935a85bf3eb05be46848cb0037bf8bfaa59553e4a
     </table>
     {% endfor %}
 {% endmacro %}
-", "@WebProfiler/Collector/messenger.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/symfony/web-profiler-bundle/Resources/views/Collector/messenger.html.twig");
+", "@WebProfiler/Collector/messenger.html.twig", "/home/juniorlaye/APIprojet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/messenger.html.twig");
     }
 }

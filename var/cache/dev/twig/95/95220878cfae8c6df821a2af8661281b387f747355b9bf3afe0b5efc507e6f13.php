@@ -268,6 +268,6 @@ class __TwigTemplate_571e760a443a3313350199d9153396ed2ac4ab3d334ec6ca97848e404e1
     {%- set label = label|trans|default(label) -%}
     {{- block('form_label') -}}
 {%- endblock -%}
-", "@VichUploader/Form/fields.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/vich/uploader-bundle/Resources/views/Form/fields.html.twig");
+", "@VichUploader/Form/fields.html.twig", "/home/juniorlaye/APIprojet/vendor/vich/uploader-bundle/Resources/views/Form/fields.html.twig");
     }
 }

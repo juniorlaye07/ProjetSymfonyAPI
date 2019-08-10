@@ -471,6 +471,6 @@ class __TwigTemplate_176435552def18566424255354227c5d99228424acbc404ed7b4bbd8b86
         </div>
     {% endif %}
 {% endblock %}
-", "@WebProfiler/Collector/twig.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/symfony/web-profiler-bundle/Resources/views/Collector/twig.html.twig");
+", "@WebProfiler/Collector/twig.html.twig", "/home/juniorlaye/APIprojet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/twig.html.twig");
     }
 }

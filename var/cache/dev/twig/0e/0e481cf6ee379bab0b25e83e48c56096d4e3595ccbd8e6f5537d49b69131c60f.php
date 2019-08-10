@@ -73,6 +73,6 @@ class __TwigTemplate_a18fcae28e5025935f4c506f07c4f1b42383a2341e6a200bc19a51518ba
     <?php \$help = false === \$help_html ? \$view->escape(\$help) : \$help ?>
     <p id=\"<?php echo \$view->escape(\$id); ?>_help\" <?php echo ' '.\$view['form']->block(\$form, 'attributes', ['attr' => \$help_attr]); ?>><?php echo \$help; ?></p>
 <?php endif; ?>
-", "@Framework/Form/form_help.html.php", "/home/juniorlaye/Bureau/testapi/vendor/symfony/framework-bundle/Resources/views/Form/form_help.html.php");
+", "@Framework/Form/form_help.html.php", "/home/juniorlaye/APIprojet/vendor/symfony/framework-bundle/Resources/views/Form/form_help.html.php");
     }
 }

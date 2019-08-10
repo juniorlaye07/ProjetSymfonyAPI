@@ -885,6 +885,6 @@ class SvgRenderer {
         return element;
     }
 }
-", "@WebProfiler/Collector/time.js", "/home/juniorlaye/Bureau/testapi/vendor/symfony/web-profiler-bundle/Resources/views/Collector/time.js");
+", "@WebProfiler/Collector/time.js", "/home/juniorlaye/APIprojet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/time.js");
     }
 }

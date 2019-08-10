@@ -291,6 +291,6 @@ class __TwigTemplate_883307a95225435f985ca484c6fea03fe830f10fbe8381a9e0f2c552229
         </tbody>
     </table>
 {% endblock %}
-", "@VichUploader/Collector/mapping_collector.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/vich/uploader-bundle/Resources/views/Collector/mapping_collector.html.twig");
+", "@VichUploader/Collector/mapping_collector.html.twig", "/home/juniorlaye/APIprojet/vendor/vich/uploader-bundle/Resources/views/Collector/mapping_collector.html.twig");
     }
 }

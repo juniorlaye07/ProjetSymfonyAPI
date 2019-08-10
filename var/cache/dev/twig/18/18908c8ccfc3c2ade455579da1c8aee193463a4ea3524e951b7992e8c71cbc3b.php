@@ -375,6 +375,6 @@ class __TwigTemplate_418c55aefbbfe6f705a1c4c120f578416e8be1e3f84966012e862b5568a
 
 </body>
 </html>
-", "@ApiPlatform/SwaggerUi/index.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig");
+", "@ApiPlatform/SwaggerUi/index.html.twig", "/home/juniorlaye/APIprojet/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig");
     }
 }

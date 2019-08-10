@@ -1828,6 +1828,6 @@ class __TwigTemplate_e30d0e4180b1aa9fb408f114b26bf03a5b04831823c107a7ce804853e98
         </tbody>
     </table>
 {% endmacro %}
-", "@Doctrine/Collector/db.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/doctrine/doctrine-bundle/Resources/views/Collector/db.html.twig");
+", "@Doctrine/Collector/db.html.twig", "/home/juniorlaye/APIprojet/vendor/doctrine/doctrine-bundle/Resources/views/Collector/db.html.twig");
     }
 }

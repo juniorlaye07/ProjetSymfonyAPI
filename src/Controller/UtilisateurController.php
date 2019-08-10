@@ -41,32 +41,48 @@ class UtilisateurController extends AbstractController
     public function login(Request $request,JWTEncoderInterface $JWTEncoder)
     {
         $values = json_decode($request->getContent());
-          $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
-          
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur introuvable');
-        }
 
+        $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
+        $statuser=$user->getStatus();
+       
+        $partenstat = $user->getPartenaire()->getStatut();
+        
+        $roleUser=$user->getRoles();
+       
+        if (!$user) 
+        {
+            throw $this->createNotFoundException('Nom d\'Utilisateur incorrect');
+        }
         $isValid = $this->passwordEncoder->isPasswordValid($user,$values->password);
         if (!$isValid) 
         {
             throw new BadCredentialsException();
-        }
-        $user->getStatus();     
-        if ($user->getStatus()=='Bloquer') 
+        } 
+        if ($partenstat =='Bloquer') 
         {
             $data = [
                 'stat' => 400,
-                'messge' => 'Cette utilisateur est bloqué,veillez vous adressez à votre administrateur systeme!'
+                'messge' => 'Accés refusé! votre prestataire a été bloqué.'
             ];
             return new JsonResponse($data, 400);
         }
-        $token = $JWTEncoder->encode([
-            'username' => $user->getUsername(),
-            'exp' => time() + 3600 // 1 hour expiration
-        ]);
+        elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer')
+        {
+            $data = [
+                'stat' => 400,
+                'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
+            ];
+            return new JsonResponse($data, 400);
+        }
+        else 
+        {
+            $token = $JWTEncoder->encode([
+                'username' => $user->getUsername(),
+                'exp' => time() + 3600 // 1 hour expiration
+            ]);
 
-        return new JsonResponse(['token' => $token]);
+            return new JsonResponse(['token' => $token]);
+        }
     }
 //=====================================>Formulaire d'ajout Utilisateur<===================£==============================================================================//
     /**
@@ -151,7 +167,7 @@ class UtilisateurController extends AbstractController
         }
         $entityManager->flush();
         $data = [
-            'statut' => 200,
+            'statu' => 200,
             'messag' => 'Le statuts de l\'utilisateur a été mis à jour'
         ];
         return new JsonResponse($data);

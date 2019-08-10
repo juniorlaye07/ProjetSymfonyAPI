@@ -17,6 +17,7 @@ class PartenaireType extends AbstractType
             ->add('adresse')
             ->add('email')
             ->add('tel')
+            ->add('statut')
         ;
     }
     public function configureOptions(OptionsResolver $resolver)

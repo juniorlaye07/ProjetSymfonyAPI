@@ -792,6 +792,6 @@ class __TwigTemplate_9a4e8ef8439070e1a10b0a26eb3d00d1739bc55f5512052e23ce98f00f6
         </table>
     {% endif %}
 {% endblock %}
-", "@WebProfiler/Collector/config.html.twig", "/home/juniorlaye/Bureau/testapi/vendor/symfony/web-profiler-bundle/Resources/views/Collector/config.html.twig");
+", "@WebProfiler/Collector/config.html.twig", "/home/juniorlaye/APIprojet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/config.html.twig");
     }
 }
