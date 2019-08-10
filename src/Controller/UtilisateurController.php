@@ -6,6 +6,7 @@ use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,14 +42,8 @@ class UtilisateurController extends AbstractController
     public function login(Request $request,JWTEncoderInterface $JWTEncoder)
     {
         $values = json_decode($request->getContent());
-
-        $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
-        $statuser=$user->getStatus();
-       
-        $partenstat = $user->getPartenaire()->getStatut();
+        $user= $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username'=>$values->username]);
         
-        $roleUser=$user->getRoles();
-       
         if (!$user) 
         {
             throw $this->createNotFoundException('Nom d\'Utilisateur incorrect');
@@ -57,7 +52,15 @@ class UtilisateurController extends AbstractController
         if (!$isValid) 
         {
             throw new BadCredentialsException();
-        } 
+        }
+        //===============================================================================
+        $profil = $this->getUser()->getRoles(); 
+        $statuser =  $this->getUser()->getStatus();
+
+        if (!empty($statuser)&& $profil!=['ROLE_CAISIER']) {
+        $partenstat = $this->getUser()->getPartenaire()->getStatut();
+        var_dump($partenstat);
+
         if ($partenstat =='Bloquer') 
         {
             $data = [
@@ -74,7 +77,8 @@ class UtilisateurController extends AbstractController
             ];
             return new JsonResponse($data, 400);
         }
-        else 
+    }
+        else
         {
             $token = $JWTEncoder->encode([
                 'username' => $user->getUsername(),
@@ -142,6 +146,21 @@ class UtilisateurController extends AbstractController
         ];
         return new JsonResponse($data, 201);
     }
+    //==================================>Listes des utilisateurs<===================£=========================================================================================//
+    /**
+     * @Route("/listes", name="listeUtilisateur", methods={"GET"})
+     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
+     */
+   /*  public function show(UtilisateurRepository $utilisateurRepository, SerializerInterface $serializer)
+}
+        $user = $utilisateurRepository->find();
+        var_dump($user);
+        die();
+        $data = $serializer->serialize($user, 'json');
+        return new Response($data, 200, [
+            'Content-Typ' => 'applicatio/json'
+        ]);
+    } */
     //========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})

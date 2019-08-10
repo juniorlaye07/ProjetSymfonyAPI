@@ -25,7 +25,6 @@ class UtilisateurFixtures extends Fixture
         $user->setPrenom('Abdoulaye');
         $user->setNom('Ngom');
         $user->setTel('776418887');
-        $user->setStatus('Actif');
         $user->setImageName('Api1.jpeg');
         $user->setUpdatedAt(new \DateTime);
         $manager->persist($user);

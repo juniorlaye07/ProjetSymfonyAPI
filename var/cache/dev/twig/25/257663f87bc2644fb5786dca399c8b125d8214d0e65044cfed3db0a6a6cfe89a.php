@@ -32,7 +32,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
 
     protected function doGetParent(array $context)
     {
-        // line 1
+        // line 2
         return "base.html.twig";
     }
 
@@ -45,7 +45,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "partenaire/index.html.twig"));
 
-        $this->parent = $this->loadTemplate("base.html.twig", "partenaire/index.html.twig", 1);
+        $this->parent = $this->loadTemplate("base.html.twig", "partenaire/index.html.twig", 2);
         $this->parent->display($context, array_merge($this->blocks, $blocks));
         
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e->leave($__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e_prof);
@@ -55,7 +55,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
 
     }
 
-    // line 3
+    // line 4
     public function block_title($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -65,7 +65,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "title"));
 
-        echo "Hello PartenaireController!";
+        echo "Contrat de Prestation";
         
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->leave($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof);
 
@@ -74,7 +74,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
 
     }
 
-    // line 5
+    // line 6
     public function block_body($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -84,26 +84,23 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02 = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 6
+        // line 7
         echo "<style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
 <div class=\"example-wrapper\">
-    <h1>Hello ";
-        // line 12
-        echo twig_escape_filter($this->env, (isset($context["controller_name"]) || array_key_exists("controller_name", $context) ? $context["controller_name"] : (function () { throw new RuntimeError('Variable "controller_name" does not exist.', 12, $this->source); })()), "html", null, true);
-        echo "! ✅</h1>
+    <h1>Hello ✅</h1>
 
     This friendly message is coming from:
     <ul>
         <li>Your controller at <code><a href=\"";
-        // line 16
+        // line 17
         echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\CodeExtension']->getFileLink("/home/juniorlaye/APIprojet/src/Controller/PartenaireController.php", 0), "html", null, true);
         echo "\">src/Controller/PartenaireController.php</a></code></li>
         <li>Your template at <code><a href=\"";
-        // line 17
+        // line 18
         echo twig_escape_filter($this->env, $this->extensions['Symfony\Bridge\Twig\Extension\CodeExtension']->getFileLink("/home/juniorlaye/APIprojet/templates/partenaire/index.html.twig", 0), "html", null, true);
         echo "\">templates/partenaire/index.html.twig</a></code></li>
     </ul>
@@ -129,14 +126,15 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
 
     public function getDebugInfo()
     {
-        return array (  107 => 17,  103 => 16,  96 => 12,  88 => 6,  78 => 5,  59 => 3,  36 => 1,);
+        return array (  104 => 18,  100 => 17,  88 => 7,  78 => 6,  59 => 4,  36 => 2,);
     }
 
     public function getSourceContext()
     {
-        return new Source("{% extends 'base.html.twig' %}
+        return new Source("{# ./templates/default/mypdf.html.twig #}
+{% extends 'base.html.twig' %}
 
-{% block title %}Hello PartenaireController!{% endblock %}
+{% block title %}Contrat de Prestation{% endblock %}
 
 {% block body %}
 <style>
@@ -145,7 +143,7 @@ class __TwigTemplate_69d94611188503bb1843ff5c86fafe4477d5478fb93539edf4db9055800
 </style>
 
 <div class=\"example-wrapper\">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Hello ✅</h1>
 
     This friendly message is coming from:
     <ul>

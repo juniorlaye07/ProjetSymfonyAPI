@@ -4659,7 +4659,7 @@
       <tag name="console.command" command="server:run"/>
       <argument>/home/juniorlaye/APIprojet/public</argument>
       <argument>dev</argument>
-      <argument>/home/juniorlaye/APIprojet</argument>
+      <argument>/home/juniorlaye/APIprojet/var/cache</argument>
       <call method="setName">
         <argument>server:run</argument>
       </call>
@@ -4668,21 +4668,21 @@
       <tag name="console.command" command="server:start"/>
       <argument>/home/juniorlaye/APIprojet/public</argument>
       <argument>dev</argument>
-      <argument>/home/juniorlaye/APIprojet</argument>
+      <argument>/home/juniorlaye/APIprojet/var/cache</argument>
       <call method="setName">
         <argument>server:start</argument>
       </call>
     </service>
     <service id="web_server.command.server_stop" class="Symfony\Bundle\WebServerBundle\Command\ServerStopCommand" public="false">
       <tag name="console.command" command="server:stop"/>
-      <argument>/home/juniorlaye/APIprojet</argument>
+      <argument>/home/juniorlaye/APIprojet/var/cache</argument>
       <call method="setName">
         <argument>server:stop</argument>
       </call>
     </service>
     <service id="web_server.command.server_status" class="Symfony\Bundle\WebServerBundle\Command\ServerStatusCommand" public="false">
       <tag name="console.command" command="server:status"/>
-      <argument>/home/juniorlaye/APIprojet</argument>
+      <argument>/home/juniorlaye/APIprojet/var/cache</argument>
       <call method="setName">
         <argument>server:status</argument>
       </call>
@@ -5448,10 +5448,10 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.eIEYWuf" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.WORG1MU" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="partenaireRepository" type="service" id="App\Repository\PartenaireRepository"/>
+        <argument key="partenRepository" type="service" id="App\Repository\PartenaireRepository"/>
         <argument key="serializer" type="service" id="serializer"/>
       </argument>
     </service>
@@ -5478,13 +5478,13 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.tAel.dx" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.M.eyjuC" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\CaisierController::FaireDepot" type="service" id=".service_locator.ZIsCxOI"/>
         <argument key="App\Controller\PartenaireController::Compte" type="service" id=".service_locator.ZIsCxOI"/>
         <argument key="App\Controller\PartenaireController::add" type="service" id=".service_locator.H3qnu8f"/>
-        <argument key="App\Controller\PartenaireController::listParten" type="service" id=".service_locator.eIEYWuf"/>
+        <argument key="App\Controller\PartenaireController::show" type="service" id=".service_locator.WORG1MU"/>
         <argument key="App\Controller\PartenaireController::update" type="service" id=".service_locator..paYi0V"/>
         <argument key="App\Controller\UtilisateurController::addUtilisateur" type="service" id=".service_locator..EwH3.j"/>
         <argument key="App\Controller\UtilisateurController::alouerCompte" type="service" id=".service_locator.nk9g.Cv"/>
@@ -5493,7 +5493,7 @@
         <argument key="App\Controller\CaisierController:FaireDepot" type="service" id=".service_locator.ZIsCxOI"/>
         <argument key="App\Controller\PartenaireController:Compte" type="service" id=".service_locator.ZIsCxOI"/>
         <argument key="App\Controller\PartenaireController:add" type="service" id=".service_locator.H3qnu8f"/>
-        <argument key="App\Controller\PartenaireController:listParten" type="service" id=".service_locator.eIEYWuf"/>
+        <argument key="App\Controller\PartenaireController:show" type="service" id=".service_locator.WORG1MU"/>
         <argument key="App\Controller\PartenaireController:update" type="service" id=".service_locator..paYi0V"/>
         <argument key="App\Controller\UtilisateurController:addUtilisateur" type="service" id=".service_locator..EwH3.j"/>
         <argument key="App\Controller\UtilisateurController:alouerCompte" type="service" id=".service_locator.nk9g.Cv"/>
@@ -5769,12 +5769,12 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.tAel.dx"/>
+      <argument type="service" id=".service_locator.M.eyjuC"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver" public="false">
-      <argument type="service" id=".service_locator.tAel.dx"/>
+      <argument type="service" id=".service_locator.M.eyjuC"/>
     </service>
     <service id="api_platform.swagger.normalizer.api_gateway.inner" class="ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer" public="false">
       <argument type="service" id="api_platform.metadata.resource.metadata_factory.cached"/>
@@ -6257,7 +6257,7 @@
     <service id="Vich\UploaderBundle\Form\Type\VichImageType" alias="vich_uploader.form.type.image" public="false"/>
     <service id="Vich\UploaderBundle\Templating\Helper\UploaderHelper" alias="vich_uploader.templating.helper.uploader_helper" public="false"/>
     <service id="Vich\UploaderBundle\Twig\Extension\UploaderExtension" alias="vich_uploader.twig.extension.uploader" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.tAel.dx"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.M.eyjuC"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="api_platform.name_converter" alias="serializer.name_converter.metadata_aware"/>

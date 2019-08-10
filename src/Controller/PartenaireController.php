@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Compte;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
@@ -12,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -19,14 +22,45 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * @Route("/api/super")
- */
+
 class PartenaireController extends AbstractController
 {
-//=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
-     * @Route("/partenaire", name="partenaire", methods={"POST"})
+    * @Route("/contrat", name="contrat", methods={"GET"})
+    */
+    public function Contrat(){
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('partenaire/index.html.twig', [
+            'title' => "Contrat de Prestation"
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("contratprestataire.pdf", [
+            "Attachment" => false
+        ]);
+        // Send some text response
+        return new Response("Le fichier PDF a été bien générer !");
+   
+    }
+    //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
+    /**
+     * @Route("api/partenaire", name="partenaire", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
@@ -90,9 +124,9 @@ class PartenaireController extends AbstractController
         return new JsonResponse($data, 201);
 
     }
-//=============================================>Bloquer un partenaire<========================£======================================================================================================//
+    //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
-     * @Route("/partenaire/{id}", name="updatparten", methods={"PUT"})
+     * @Route("api/partenaire/{id}", name="updatparten", methods={"PUT"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -122,21 +156,21 @@ class PartenaireController extends AbstractController
     }
     //========================================>Lister les Partenaires<============================£========================================================================//
     /**
-     * @Route("/listParten", name="listpartenaire", methods={"GET"})
+     * @Route("api/listParten", name="prestas", methods={"GET"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
-    public function listParten(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
+    public function show(PartenaireRepository $partenRepository, SerializerInterface $serializer)
     {
-        $partenaires = $partenaireRepository->findAll();
-        $data = $serializer->serialize($partenaires, 'json');
-
+        $parten = $partenRepository->findAll();
+        var_dump($parten);die();
+        $data = $serializer->serialize($parten, 'json');
         return new Response($data, 200, [
             'Content-Type' => 'application/json'
         ]);
     }
     //==============================================>Créer un compte Partenaire<=================================================================//
     /**
-     * @Route("/compte", name="compte", methods={"POST"})
+     * @Route("api/compte", name="compte", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME","ROLE_CAISIER"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme ou caisier.")
      */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
