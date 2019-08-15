@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Transaction index{% endblock %}
+
+{% block body %}
+    <h1>Transaction index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom_en</th>
+                <th>Prenom_en</th>
+                <th>Nom_ben</th>
+                <th>Prenom_ben</th>
+                <th>Date_trans</th>
+                <th>CIN_en</th>
+                <th>CIN_ben</th>
+                <th>Code</th>
+                <th>Envoie</th>
+                <th>Retrait</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.nomEn }}</td>
+                <td>{{ transaction.prenomEn }}</td>
+                <td>{{ transaction.nomBen }}</td>
+                <td>{{ transaction.prenomBen }}</td>
+                <td>{{ transaction.dateTrans ? transaction.dateTrans|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ transaction.CINEn }}</td>
+                <td>{{ transaction.CINBen }}</td>
+                <td>{{ transaction.code }}</td>
+                <td>{{ transaction.envoie }}</td>
+                <td>{{ transaction.retrait }}</td>
+                <td>
+                    <a href="{{ path('transaction_show', {'id': transaction.id}) }}">show</a>
+                    <a href="{{ path('transaction_edit', {'id': transaction.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('transaction_new') }}">Create new</a>
+{% endblock %}

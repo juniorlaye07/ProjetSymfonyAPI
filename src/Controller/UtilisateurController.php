@@ -54,13 +54,12 @@ class UtilisateurController extends AbstractController
             throw new BadCredentialsException();
         }
         //===============================================================================
-        $profil = $this->getUser()->getRoles(); 
-        $statuser =  $this->getUser()->getStatus();
-
+        $profil =$user= $this->getUser()->getRoles(); 
+        $statuser = $this->getUser()->getStatus();
+       
         if (!empty($statuser)&& $profil!=['ROLE_CAISIER']) {
         $partenstat = $this->getUser()->getPartenaire()->getStatut();
-        var_dump($partenstat);
-
+       
         if ($partenstat =='Bloquer') 
         {
             $data = [
@@ -78,12 +77,12 @@ class UtilisateurController extends AbstractController
             return new JsonResponse($data, 400);
         }
     }
-        else
+    else
         {
-            $token = $JWTEncoder->encode([
-                'username' => $user->getUsername(),
-                'exp' => time() + 3600 // 1 hour expiration
-            ]);
+        $token = $JWTEncoder->encode([
+            'username' => $user->getUsername(),
+            'exp' => time() + 3600 // 1 hour expiration
+        ]);
 
             return new JsonResponse(['token' => $token]);
         }
@@ -147,20 +146,7 @@ class UtilisateurController extends AbstractController
         return new JsonResponse($data, 201);
     }
     //==================================>Listes des utilisateurs<===================£=========================================================================================//
-    /**
-     * @Route("/listes", name="listeUtilisateur", methods={"GET"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
-     */
-   /*  public function show(UtilisateurRepository $utilisateurRepository, SerializerInterface $serializer)
-}
-        $user = $utilisateurRepository->find();
-        var_dump($user);
-        die();
-        $data = $serializer->serialize($user, 'json');
-        return new Response($data, 200, [
-            'Content-Typ' => 'applicatio/json'
-        ]);
-    } */
+  
     //========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})
@@ -207,11 +193,14 @@ class UtilisateurController extends AbstractController
             if (!empty($values)&& $values->getNumeroCompte()!= $numero)
             {
                $numero_compte = $values->getNumeroCompte();
-               $user->setNumeroCompte($numero_compte);
+              
             }
             break;
         }
-        $errors = $validator->validate($user);
+        $CompteUpdate = $entityManager->getRepository(Utilisateur::class)->find($user->getId());
+        $user->setNumeroCompte($numero_compte);
+        
+        $errors = $validator->validate($CompteUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
             return new Response($errors, 500, [

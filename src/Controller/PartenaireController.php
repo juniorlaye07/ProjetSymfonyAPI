@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -29,36 +28,30 @@ class PartenaireController extends AbstractController
     * @Route("/contrat", name="contrat", methods={"GET"})
     */
     public function Contrat(){
-        // Configure Dompdf according to your needs
+
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
 
-        // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
 
-        // Retrieve the HTML generated in our twig file
         $html = $this->renderView('partenaire/index.html.twig', [
             'title' => "Contrat de Prestation"
         ]);
-
-        // Load HTML to Dompdf
+       
         $dompdf->loadHtml($html);
 
-        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
         $dompdf->setPaper('A4', 'portrait');
 
-        // Render the HTML as PDF
         $dompdf->render();
 
-        // Output the generated PDF to Browser (force download)
         $dompdf->stream("contratprestataire.pdf", [
             "Attachment" => false
         ]);
-        // Send some text response
+      
         return new Response("Le fichier PDF a été bien générer !");
    
     }
-    //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
+//=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("api/partenaire", name="partenaire", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
@@ -124,7 +117,7 @@ class PartenaireController extends AbstractController
         return new JsonResponse($data, 201);
 
     }
-    //=============================================>Bloquer un partenaire<========================£======================================================================================================//
+//=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("api/partenaire/{id}", name="updatparten", methods={"PUT"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
@@ -154,7 +147,7 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data);
     }
-    //========================================>Lister les Partenaires<============================£========================================================================//
+//========================================>Lister les Partenaires<============================£========================================================================//
     /**
      * @Route("api/listParten", name="prestas", methods={"GET"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
@@ -168,7 +161,7 @@ class PartenaireController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
-    //==============================================>Créer un compte Partenaire<=================================================================//
+//==============================================>Créer un compte Partenaire<=================================================================//
     /**
      * @Route("api/compte", name="compte", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME","ROLE_CAISIER"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme ou caisier.")
