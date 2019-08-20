@@ -64,7 +64,7 @@ class UtilisateurController extends AbstractController
                     'stat' => 400,
                     'messge' => 'Accés refusé! votre prestataire a été bloqué.'
                 ];
-                return new JsonResponse($data, 400);
+                throw new JsonResponse($data, 400);
             }
             elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer') 
             {
@@ -72,7 +72,7 @@ class UtilisateurController extends AbstractController
                     'stat' => 400,
                     'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
                 ];
-                return new JsonResponse($data, 400);
+                throw new JsonResponse($data, 400);
             }
             else
             {
@@ -81,7 +81,7 @@ class UtilisateurController extends AbstractController
                     'exp' => time() + 3600 // 1 hour expiration
                 ]);
 
-                return new JsonResponse(['token' => $token]);
+                throw new JsonResponse(['token' => $token]);
             }
         }
         else
@@ -132,7 +132,7 @@ class UtilisateurController extends AbstractController
                     'stat' => 400,
                     'messge' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
                 ];
-                return new JsonResponse($data, 400);
+                throw new JsonResponse($data, 400);
         }
     
         $entityManager = $this->getDoctrine()->getManager();
@@ -142,7 +142,7 @@ class UtilisateurController extends AbstractController
         $errors = $validator->validate($user);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
+            throw new Response($errors, 500, [
                 'Content-Typ' => 'applicatio/json'
             ]);
         }
@@ -173,7 +173,7 @@ class UtilisateurController extends AbstractController
         $errors = $validator->validate($utilisaUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
+            throw new Response($errors, 500, [
                 'Content-Type' => 'application/json'
             ]);
         }
@@ -209,7 +209,7 @@ class UtilisateurController extends AbstractController
         $errors = $validator->validate($CompteUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
+            throw new Response($errors, 500, [
                 'Content-Type' => 'application/json'
             ]);
         }

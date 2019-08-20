@@ -60,7 +60,7 @@ class CaisierController extends AbstractController
             'status' => 500,
             'message' => 'Vous devez renseigner tous les champs et votre montant est insuffisant!'
         ];
-        return new JsonResponse($data, 500);
+        throw new JsonResponse($data, 500);
     }
 } 
 //==========================================================>Juniorlaye07<============================================================================================//

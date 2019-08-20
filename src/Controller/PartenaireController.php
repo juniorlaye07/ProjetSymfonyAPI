@@ -105,7 +105,7 @@ class PartenaireController extends AbstractController
         $errors = $validator->validate($user);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
+            throw new Response($errors, 500, [
                 'Content-Typ' => 'applicatio/json'
             ]);
         }
@@ -138,7 +138,7 @@ class PartenaireController extends AbstractController
         $errors = $validator->validate($partenUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
+            throw new Response($errors, 500, [
                 'Content-Type' => 'application/json'
             ]);
         }
@@ -201,7 +201,7 @@ class PartenaireController extends AbstractController
             'statut' => 400,
             'messag' => 'Le solde initial du compte doit etre égale à 0 !'
         ];
-        return new JsonResponse($data);
+        throw new JsonResponse($data);
     }
 }
 //======================================================================>Juniorlaye07<=================================================================================//
