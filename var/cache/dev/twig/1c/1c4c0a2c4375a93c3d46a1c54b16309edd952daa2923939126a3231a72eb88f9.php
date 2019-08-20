@@ -52,19 +52,30 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
         // line 5
         $this->displayBlock('title', $context, $blocks);
         echo "</title>
+         <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+         <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>
+         <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">
+         <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>
+         <link href='http://fonts.googleapis.com/css?family=Holtwood+One+SC' rel='stylesheet' type='text/css'>
+         <link rel=\"stylesheet\" href=\"styles.css\">
         ";
-        // line 6
+        // line 12
         $this->displayBlock('stylesheets', $context, $blocks);
-        // line 7
+        // line 13
         echo "    </head>
-    <body>
+    <body style=\"background-color: rgb(185, 200, 241);border-radius:20px 10px 20px 10px;\">
+        <header>
+            <h2 class=\"btn btn-primary btn-lg\">Kanuni@Money</h2>
+        </header>
         ";
-        // line 9
+        // line 18
         $this->displayBlock('body', $context, $blocks);
-        // line 10
-        echo "        ";
+        // line 19
+        echo "        <footer style=\"text-align: center;\" class=\"btn btn-primary btn-lg\">Kanuni@Money</footer>
+        ";
+        // line 20
         $this->displayBlock('javascripts', $context, $blocks);
-        // line 11
+        // line 21
         echo "    </body>
 </html>
 ";
@@ -95,7 +106,7 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
 
     }
 
-    // line 6
+    // line 12
     public function block_stylesheets($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -113,7 +124,7 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
 
     }
 
-    // line 9
+    // line 18
     public function block_body($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -131,7 +142,7 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
 
     }
 
-    // line 10
+    // line 20
     public function block_javascripts($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -156,7 +167,7 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
 
     public function getDebugInfo()
     {
-        return array (  135 => 10,  117 => 9,  99 => 6,  80 => 5,  68 => 11,  65 => 10,  63 => 9,  59 => 7,  57 => 6,  53 => 5,  47 => 1,);
+        return array (  146 => 20,  128 => 18,  110 => 12,  91 => 5,  79 => 21,  77 => 20,  74 => 19,  72 => 18,  65 => 13,  63 => 12,  53 => 5,  47 => 1,);
     }
 
     public function getSourceContext()
@@ -166,10 +177,20 @@ class __TwigTemplate_be9f67bb1dcd95060f7ecf722457f34b6e851408a2d7bc8f0823b216d64
     <head>
         <meta charset=\"UTF-8\">
         <title>{% block title %}Welcome!{% endblock %}</title>
+         <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+         <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>
+         <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">
+         <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>
+         <link href='http://fonts.googleapis.com/css?family=Holtwood+One+SC' rel='stylesheet' type='text/css'>
+         <link rel=\"stylesheet\" href=\"styles.css\">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
+    <body style=\"background-color: rgb(185, 200, 241);border-radius:20px 10px 20px 10px;\">
+        <header>
+            <h2 class=\"btn btn-primary btn-lg\">Kanuni@Money</h2>
+        </header>
         {% block body %}{% endblock %}
+        <footer style=\"text-align: center;\" class=\"btn btn-primary btn-lg\">Kanuni@Money</footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

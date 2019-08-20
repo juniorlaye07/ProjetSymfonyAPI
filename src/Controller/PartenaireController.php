@@ -21,11 +21,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
+/**
+ * @Route("api/")
+ */
 class PartenaireController extends AbstractController
 {
     /**
-    * @Route("/contrat", name="contrat", methods={"GET"})
+    * @Route("contrat", name="contrat", methods={"GET"})
     */
     public function Contrat(){
 
@@ -35,7 +37,7 @@ class PartenaireController extends AbstractController
         $dompdf = new Dompdf($pdfOptions);
 
         $html = $this->renderView('partenaire/index.html.twig', [
-            'title' => "Contrat de Prestation"
+            'partenaire' => "Contrat de Prestation"
         ]);
        
         $dompdf->loadHtml($html);
@@ -53,7 +55,7 @@ class PartenaireController extends AbstractController
     }
 //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
-     * @Route("api/partenaire", name="partenaire", methods={"POST"})
+     * @Route("partenaire", name="partenaire", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
@@ -119,7 +121,7 @@ class PartenaireController extends AbstractController
     }
 //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
-     * @Route("api/partenaire/{id}", name="updatparten", methods={"PUT"})
+     * @Route("partenaire/{id}", name="updatparten", methods={"PUT"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -149,7 +151,7 @@ class PartenaireController extends AbstractController
     }
 //========================================>Lister les Partenaires<============================£========================================================================//
     /**
-     * @Route("api/listParten", name="prestas", methods={"GET"})
+     * @Route("listParten", name="prestas", methods={"GET"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function show(PartenaireRepository $partenRepository, SerializerInterface $serializer)
@@ -163,7 +165,7 @@ class PartenaireController extends AbstractController
     }
 //==============================================>Créer un compte Partenaire<=================================================================//
     /**
-     * @Route("api/compte", name="compte", methods={"POST"})
+     * @Route("compte", name="compte", methods={"POST"})
      * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME","ROLE_CAISIER"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme ou caisier.")
      */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)

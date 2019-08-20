@@ -1830,14 +1830,6 @@
         <argument>2048</argument>
       </call>
       <call method="addListener">
-        <argument>console.command</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
         <argument>kernel.exception</argument>
         <argument type="collection">
           <argument type="service" id="debug.debug_handlers_listener"/>
@@ -2854,13 +2846,6 @@
         </argument>
         <argument>null</argument>
       </call>
-      <call method="add">
-        <argument type="service" id=".security.request_matcher.D2XdegB"/>
-        <argument type="collection">
-          <argument>IS_AUTHENTICATED_FULLY</argument>
-        </argument>
-        <argument>null</argument>
-      </call>
     </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener" public="false">
       <tag name="monolog.logger" channel="security"/>
@@ -3466,9 +3451,6 @@
     </service>
     <service id=".security.request_matcher.Ud1TEPV" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
       <argument>^/api/login</argument>
-    </service>
-    <service id=".security.request_matcher.D2XdegB" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-      <argument>^/api/</argument>
     </service>
     <service id="security.command.user_password_encoder" class="Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand" public="false">
       <tag name="console.command" command="security:encode-password"/>

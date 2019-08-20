@@ -42,47 +42,54 @@ class UtilisateurController extends AbstractController
     public function login(Request $request,JWTEncoderInterface $JWTEncoder)
     {
         $values = json_decode($request->getContent());
-        $user= $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username'=>$values->username]);
-        
-        if (!$user) 
-        {
+        $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
+
+        if (!$user) {
             throw $this->createNotFoundException('Nom d\'Utilisateur incorrect');
         }
-        $isValid = $this->passwordEncoder->isPasswordValid($user,$values->password);
-        if (!$isValid) 
-        {
+        $isValid = $this->passwordEncoder->isPasswordValid($user, $values->password);
+        if (!$isValid) {
             throw new BadCredentialsException();
         }
         //===============================================================================
-        $profil =$user= $this->getUser()->getRoles(); 
-        $statuser = $this->getUser()->getStatus();
-       
-        if (!empty($statuser)&& $profil!=['ROLE_CAISIER']) {
-        $partenstat = $this->getUser()->getPartenaire()->getStatut();
-       
-        if ($partenstat =='Bloquer') 
-        {
-            $data = [
-                'stat' => 400,
-                'messge' => 'Accés refusé! votre prestataire a été bloqué.'
-            ];
-            return new JsonResponse($data, 400);
+        $profil = $this->getUser()->getRoles();
+        $statuser =  $this->getUser()->getStatus();
+
+        if (!empty($statuser) && $profil != ['ROLE_CAISIER']) {
+            $partenstat = $this->getUser()->getPartenaire()->getStatut();
+
+
+            if ($partenstat == 'Bloquer') {
+                $data = [
+                    'stat' => 400,
+                    'messge' => 'Accés refusé! votre prestataire a été bloqué.'
+                ];
+                return new JsonResponse($data, 400);
+            }
+            elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer') 
+            {
+                $data = [
+                    'stat' => 400,
+                    'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
+                ];
+                return new JsonResponse($data, 400);
+            }
+            else
+            {
+                $token = $JWTEncoder->encode([
+                    'usernam' => $user->getUsername(),
+                    'exp' => time() + 3600 // 1 hour expiration
+                ]);
+
+                return new JsonResponse(['token' => $token]);
+            }
         }
-        elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer')
+        else
         {
-            $data = [
-                'stat' => 400,
-                'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
-            ];
-            return new JsonResponse($data, 400);
-        }
-    }
-    else
-        {
-        $token = $JWTEncoder->encode([
-            'username' => $user->getUsername(),
-            'exp' => time() + 3600 // 1 hour expiration
-        ]);
+            $token = $JWTEncoder->encode([
+                'username' => $user->getUsername(),
+                'exp' => time() + 3600 // 1 hour expiration
+            ]);
 
             return new JsonResponse(['token' => $token]);
         }
@@ -193,7 +200,6 @@ class UtilisateurController extends AbstractController
             if (!empty($values)&& $values->getNumeroCompte()!= $numero)
             {
                $numero_compte = $values->getNumeroCompte();
-              
             }
             break;
         }

@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/transaction")
+ * @Route("api")
  */
 class TransactionController extends AbstractController
 {
     /**
-     * @Route("/", name="transaction_index", methods={"GET"})
+     * @Route("/trans", name="transaction_index", methods={"GET"})
      */
     public function index(TransactionRepository $transactionRepository): Response
     {
