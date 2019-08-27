@@ -45,35 +45,47 @@ class UtilisateurController extends AbstractController
         $user = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['username' => $values->username]);
 
         if (!$user) {
-            throw $this->createNotFoundException('Nom d\'Utilisateur incorrect');
+            return $this->createNotFoundException('Nom d\'Utilisateur incorrect');
         }
         $isValid = $this->passwordEncoder->isPasswordValid($user, $values->password);
         if (!$isValid) {
-            throw new BadCredentialsException();
+            return new BadCredentialsException();
         }
         //===============================================================================
-        $profil = $this->getUser()->getRoles();
+        $profil=$this->getUser()->getRoles();
+       
         $statuser =  $this->getUser()->getStatus();
+        
+        $etat = $this->getUser()->getPartenaire();
+        
+        
+        
+        if ($profil!=['ROLE_SUPER_ADMINSYSTEME']) {
 
-        if (!empty($statuser) && $profil != ['ROLE_CAISIER']) {
+            if ($etat == NULL && $statuser == 'Bloquer') {
+            $data = [
+                'stat' => 400,
+                'mesge' => 'Votre accés est refusé! Veillez vous adressez à votre administrateur!'
+            ];
+                
+            return new JsonResponse($data, 400);
+            }
             $partenstat = $this->getUser()->getPartenaire()->getStatut();
-
-
             if ($partenstat == 'Bloquer') {
                 $data = [
                     'stat' => 400,
                     'messge' => 'Accés refusé! votre prestataire a été bloqué.'
                 ];
-                throw new JsonResponse($data, 400);
+                return new JsonResponse($data, 400);
             }
-            elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer') 
+            elseif ($etat!=NULL && $statuser == 'Bloquer') 
             {
                 $data = [
                     'stat' => 400,
                     'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
                 ];
-                throw new JsonResponse($data, 400);
-            }
+                return new JsonResponse($data, 400);
+            } 
             else
             {
                 $token = $JWTEncoder->encode([
@@ -81,7 +93,7 @@ class UtilisateurController extends AbstractController
                     'exp' => time() + 3600 // 1 hour expiration
                 ]);
 
-                throw new JsonResponse(['token' => $token]);
+                return new JsonResponse(['token' => $token]);
             }
         }
         else

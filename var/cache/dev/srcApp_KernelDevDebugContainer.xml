@@ -3319,7 +3319,7 @@
       <argument type="service" id="security.authentication.success_handler.login.json_login"/>
       <argument type="service" id="security.authentication.failure_handler.login.json_login"/>
       <argument type="collection">
-        <argument key="check_path">/api/login</argument>
+        <argument key="check_path">/api/loginck</argument>
         <argument key="use_forward">false</argument>
         <argument key="require_previous_session">false</argument>
         <argument key="username_path">username</argument>
