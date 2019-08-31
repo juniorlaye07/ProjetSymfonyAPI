@@ -53,56 +53,69 @@ class UtilisateurController extends AbstractController
         }
         //===============================================================================
         $profil=$this->getUser()->getRoles();
-       
         $statuser =  $this->getUser()->getStatus();
-        
         $etat = $this->getUser()->getPartenaire();
-        
-        
-        
-        if ($profil!=['ROLE_SUPER_ADMINSYSTEME']) {
+       
 
-            if ($etat == NULL && $statuser == 'Bloquer') {
-            $data = [
-                'stat' => 400,
-                'mesge' => 'Votre accés est refusé! Veillez vous adressez à votre administrateur!'
-            ];
+          if (!empty($statuser) && $profil!=['ROLE_CAISIER']) {
+
+                    $partenstat = $this->getUser()->getPartenaire()->getStatut();
+
+                    if ($partenstat == 'Bloquer') {
+                        $data = [
+                            'stat' => 400,
+                            'messge' => 'Accés refusé! votre prestataire a été bloqué.'
+                        ];
+                        return new JsonResponse($data, 400);
+                    }
+                    if ($partenstat == 'Actif' && $statuser == 'Bloquer') 
+                    {
                 
-            return new JsonResponse($data, 400);
-            }
-            $partenstat = $this->getUser()->getPartenaire()->getStatut();
-            if ($partenstat == 'Bloquer') {
-                $data = [
-                    'stat' => 400,
-                    'messge' => 'Accés refusé! votre prestataire a été bloqué.'
-                ];
-                return new JsonResponse($data, 400);
-            }
-            elseif ($etat!=NULL && $statuser == 'Bloquer') 
+                        $data = [
+                            'stat' => 400,
+                            'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
+                        ];
+                        return new JsonResponse($data, 400);
+                    } 
+                    else
+                    {
+                        $token = $JWTEncoder->encode([
+                            'username'=>$user->getUsername(),
+                            'roles'=>$user->getRoles(),
+                            'exp'=> time() + 3600 // 1 hour expiration
+                        ]);
+
+                        return new JsonResponse(['token' => $token]);
+                    }
+        }
+        else if( $profil==['ROLE_CAISIER']) 
+        {
+
+            if( $statuser == 'Bloquer')
             {
                 $data = [
                     'stat' => 400,
-                    'mesge' => 'Votre accés est bloqué,veillez vous adressez à votre administrateur!'
+                    'mesge' => 'Votre accés est refusé! Veillez vous adressez à votre administrateur!'
                 ];
                 return new JsonResponse($data, 400);
-            } 
+            }
             else
             {
-                $token = $JWTEncoder->encode([
-                    'usernam' => $user->getUsername(),
-                    'exp' => time() + 3600 // 1 hour expiration
-                ]);
-
-                return new JsonResponse(['token' => $token]);
+               $token = $JWTEncoder->encode([
+                'username'=>$user->getUsername(),
+                'roles'=>$user->getRoles(),
+                'exp'=> time() + 3600 // 1 hour expiration
+            ]);
+            return new JsonResponse(['token' => $token]);
             }
         }
         else
         {
             $token = $JWTEncoder->encode([
-                'username' => $user->getUsername(),
-                'exp' => time() + 3600 // 1 hour expiration
+                'username'=>$user->getUsername(),
+                'roles'=>$user->getRoles(),
+                'exp'=> time() + 3600 // 1 hour expiration
             ]);
-
             return new JsonResponse(['token' => $token]);
         }
     }
@@ -117,8 +130,8 @@ class UtilisateurController extends AbstractController
         $form->handleRequest($request);
         $Values = $request->request->all();
         $form->submit($Values);
-        $Files = $request->files->all()['imageName'];
-        $user->setImageFile($Files);
+        //$Files = $request->files->all()['imageName'];
+        //$user->setImageFile($Files);
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
        
         $profil = $Values['profil'];
@@ -165,7 +178,26 @@ class UtilisateurController extends AbstractController
         return new JsonResponse($data, 201);
     }
     //==================================>Listes des utilisateurs<===================£=========================================================================================//
-  
+    /**
+     * @Route("/listusers", name="listUser", methods={"GET"})
+     * @IsGranted({"ROLE_SUPER_ADMINPRESTA","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
+     */
+    public function listuser(SerializerInterface $serializer)
+    {
+        $userparten = $this->getUser()->getPartenaire();
+        $repo = $this->getDoctrine()->getRepository(Utilisateur::class);
+        $parten = $repo->findAll();
+        
+        foreach ($parten as  $value) {
+            $part = $value->getPartenaire();
+            $data = $serializer->serialize($userparten, 'json');
+            if ($part == $userparten) {
+                return new Response($data, 200, [
+                    'Content-Typ' => 'applicatio/json'
+                ]);
+            }
+        }
+    }
     //========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})

@@ -152,12 +152,10 @@ class PartenaireController extends AbstractController
 //========================================>Lister les Partenaires<============================£========================================================================//
     /**
      * @Route("listParten", name="prestas", methods={"GET"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
      */
     public function show(PartenaireRepository $partenRepository, SerializerInterface $serializer)
     {
         $parten = $partenRepository->findAll();
-        var_dump($parten);die();
         $data = $serializer->serialize($parten, 'json');
         return new Response($data, 200, [
             'Content-Type' => 'application/json'
