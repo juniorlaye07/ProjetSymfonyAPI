@@ -110,6 +110,11 @@ class Transaction
      */
     private $tel_ben;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $montant;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -243,6 +248,18 @@ class Transaction
     public function setTelBen(?string $tel_ben): self
     {
         $this->tel_ben = $tel_ben;
+
+        return $this;
+    }
+
+    public function getMontant(): ?string
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(?string $montant): self
+    {
+        $this->montant = $montant;
 
         return $this;
     }

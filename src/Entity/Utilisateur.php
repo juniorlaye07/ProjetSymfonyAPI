@@ -80,7 +80,7 @@ class Utilisateur implements UserInterface
     private $tel;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer",nullable=true)
      * @Assert\NotBlank(message="Veillez bien renseigner les champs")
      */
     private $status;

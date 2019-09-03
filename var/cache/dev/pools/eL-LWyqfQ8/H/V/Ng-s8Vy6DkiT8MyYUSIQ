@@ -10,8 +10,11 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
     null,
     [
         'stdClass' => [
-            'length' => [
-                255,
+            'type' => [
+                'integer',
+            ],
+            'nullable' => [
+                true,
             ],
             'message' => [
                 1 => 'Veillez bien renseigner les champs',

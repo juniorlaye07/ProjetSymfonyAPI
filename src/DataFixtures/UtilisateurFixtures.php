@@ -25,6 +25,7 @@ class UtilisateurFixtures extends Fixture
         $user->setPrenom('Abdoulaye');
         $user->setNom('Ngom');
         $user->setTel('776418887');
+        $user->setStatus(0);
         $user->setImageName('Api1.jpeg');
         $user->setUpdatedAt(new \DateTime);
         $manager->persist($user);
@@ -38,7 +39,7 @@ class UtilisateurFixtures extends Fixture
         $caisier->setPrenom('Maman');
         $caisier->setNom('Ndour');
         $caisier->setTel('777941094');
-        $caisier->setStatus('Actif');
+        $caisier->setStatus(0);
         $caisier->setImageName('Api2.JPG');
         $caisier->setUpdatedAt(new \DateTime);
       

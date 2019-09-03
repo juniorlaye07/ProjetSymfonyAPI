@@ -54,21 +54,21 @@ class UtilisateurController extends AbstractController
         //===============================================================================
         $profil=$this->getUser()->getRoles();
         $statuser =  $this->getUser()->getStatus();
-        $etat = $this->getUser()->getPartenaire();
+       
        
 
           if (!empty($statuser) && $profil!=['ROLE_CAISIER']) {
 
                     $partenstat = $this->getUser()->getPartenaire()->getStatut();
 
-                    if ($partenstat == 'Bloquer') {
+                    if ($partenstat == 1) {
                         $data = [
                             'stat' => 400,
                             'messge' => 'Accés refusé! votre prestataire a été bloqué.'
                         ];
                         return new JsonResponse($data, 400);
                     }
-                    if ($partenstat == 'Actif' && $statuser == 'Bloquer') 
+                    if ($partenstat == 0 && $statuser == 1) 
                     {
                 
                         $data = [
@@ -82,6 +82,9 @@ class UtilisateurController extends AbstractController
                         $token = $JWTEncoder->encode([
                             'username'=>$user->getUsername(),
                             'roles'=>$user->getRoles(),
+                            'partenaire'=>$user->getPartenaire(),
+                            'id'=>$user->getId(),
+                            
                             'exp'=> time() + 3600 // 1 hour expiration
                         ]);
 
@@ -91,7 +94,7 @@ class UtilisateurController extends AbstractController
         else if( $profil==['ROLE_CAISIER']) 
         {
 
-            if( $statuser == 'Bloquer')
+            if( $statuser == 1)
             {
                 $data = [
                     'stat' => 400,
@@ -104,6 +107,8 @@ class UtilisateurController extends AbstractController
                $token = $JWTEncoder->encode([
                 'username'=>$user->getUsername(),
                 'roles'=>$user->getRoles(),
+                'id'=> $user->getId(),
+                'partenaire'=>$user->getPartenaire(),
                 'exp'=> time() + 3600 // 1 hour expiration
             ]);
             return new JsonResponse(['token' => $token]);
@@ -114,27 +119,32 @@ class UtilisateurController extends AbstractController
             $token = $JWTEncoder->encode([
                 'username'=>$user->getUsername(),
                 'roles'=>$user->getRoles(),
+                'partenaire'=>$user->getPartenaire(),
+                'id'=>$user->getId(),
                 'exp'=> time() + 3600 // 1 hour expiration
             ]);
             return new JsonResponse(['token' => $token]);
         }
     }
-//=====================================>Formulaire d'ajout Utilisateur<===================£==============================================================================//
+    //=====================================>Formulaire d'ajout Utilisateur<===================£==============================================================================//
     /**
      * @Route("/form", name="form", methods={"POST","GET"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé !,veillez vous connecter en tant que super administrateur")
-     */
+    */
     public function addUtilisateur(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer, ValidatorInterface $validator){
         $user = new Utilisateur();
+        
         $form = $this->createForm(UtilisateurType::class, $user);
         $form->handleRequest($request);
         $Values = $request->request->all();
         $form->submit($Values);
-        //$Files = $request->files->all()['imageName'];
-        //$user->setImageFile($Files);
+        $Files = $request->files->all()['imageName'];
+        $user->setImageFile($Files);
+        $user->setStatus(0);
         $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+        
        
         $profil = $Values['profil'];
+        
         switch ($profil) {
             case 1:
                 $user->setRoles(['ROLE_ADMINSYSTEME']);
@@ -149,15 +159,15 @@ class UtilisateurController extends AbstractController
                 break;
             case 4:
                 $user->setRoles(['ROLE_USER']);
-                $parten = $this->getUser()->getPartenaire();
-                $user->setPartenaire($parten);
+                 $parten = $this->getUser()->getPartenaire();
+                 $user->setPartenaire($parten);
                 break;
             default:
                 $data = [
                     'stat' => 400,
                     'messge' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
                 ];
-                throw new JsonResponse($data, 400);
+                return new JsonResponse($data, 400);
         }
     
         $entityManager = $this->getDoctrine()->getManager();
@@ -167,7 +177,7 @@ class UtilisateurController extends AbstractController
         $errors = $validator->validate($user);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            throw new Response($errors, 500, [
+            return new Response($errors, 500, [
                 'Content-Typ' => 'applicatio/json'
             ]);
         }
@@ -179,60 +189,71 @@ class UtilisateurController extends AbstractController
     }
     //==================================>Listes des utilisateurs<===================£=========================================================================================//
     /**
-     * @Route("/listusers", name="listUser", methods={"GET"})
-     * @IsGranted({"ROLE_SUPER_ADMINPRESTA","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
-     */
-    public function listuser(SerializerInterface $serializer)
-    {
-        $userparten = $this->getUser()->getPartenaire();
-        $repo = $this->getDoctrine()->getRepository(Utilisateur::class);
-        $parten = $repo->findAll();
-        
-        foreach ($parten as  $value) {
-            $part = $value->getPartenaire();
-            $data = $serializer->serialize($userparten, 'json');
-            if ($part == $userparten) {
-                return new Response($data, 200, [
-                    'Content-Typ' => 'applicatio/json'
-                ]);
+     * @Route("/listusers/{id}", name="listUser", methods={"GET"})
+    */
+    public function listuser(SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    {                            
+        $colect= $entityManager->getRepository(Utilisateur::class);
+        $user=$colect->findAll();
+        $Objetjson = $serializer->serialize($user,'json',[
+            'circular_reference_handler' => function ($Obj){
+                return $Obj->getId();
             }
-        }
+        ]) ;                                
+        return new Response($Objetjson, 200, ['Content-Typ' => 'applicatio/json']);
     }
+
+
     //========================Bloquer un utilisateur========================£===============================================================================================//
     /**
      * @Route("/utilisateur/{id}", name="utilisaUpdate", methods={"PUT"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
-     */
-    public function updat(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    */
+    // public function updat(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    // {
+    //     $utilisaUpdate = $entityManager->getRepository(Utilisateur::class)->find($user->getId());
+    //     $data = json_decode($request->getContent());
+    //     foreach ($data as $key => $values) {
+    //         if ($key && !empty($values)) {
+    //             $status = ucfirst($key);
+    //             $setter = 'set' . $status;
+    //             $utilisaUpdate->$setter($values);
+    //         }
+    //     }
+    //     $errors = $validator->validate($utilisaUpdate);
+    //     if (count($errors)) {
+    //         $errors = $serializer->serialize($errors, 'json');
+    //         return new Response($errors, 500, [
+    //             'Content-Type' => 'application/json'
+    //         ]);
+    //     }
+    //     $entityManager->flush();
+    //     $data = [
+    //         'statu' => 200,
+    //         'messag' => 'Le statuts de l\'utilisateur a été mis à jour'
+    //     ];
+    //     return new JsonResponse($data);
+    // }
+    public function bloqueDebloqueUser(Request $request, EntityManagerInterface $mng, $id)
     {
-        $utilisaUpdate = $entityManager->getRepository(Utilisateur::class)->find($user->getId());
-        $data = json_decode($request->getContent());
-        foreach ($data as $key => $values) {
-            if ($key && !empty($values)) {
-                $status = ucfirst($key);
-                $setter = 'set' . $status;
-                $utilisaUpdate->$setter($values);
-            }
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $id]);
+        if ($user->getIsActive()) {
+            $user->setIsActive(false);
+        } else {
+            $user->setIsActive(true);
         }
-        $errors = $validator->validate($utilisaUpdate);
-        if (count($errors)) {
-            $errors = $serializer->serialize($errors, 'json');
-            throw new Response($errors, 500, [
-                'Content-Type' => 'application/json'
-            ]);
-        }
-        $entityManager->flush();
+        $mng = $this->getDoctrine()->getManager();
+        $mng->persist($user);
+        $mng->flush();
         $data = [
-            'statu' => 200,
-            'messag' => 'Le statuts de l\'utilisateur a été mis à jour'
+            'status' => 200,
+            'message' => 'Le téléuser a bien été mis à jour'
         ];
         return new JsonResponse($data);
     }
     //=========================================>Allouer un compte à User<=========================£============================================================================//
     /**
      * @Route("/UpdateCompte/{id}", name="Update", methods={"PUT"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_SUPER_ADMINPRESTA","ROLE_ADMINSYSTEME","ROLE_ADMINPRESTA"},message="Acces Refusé!Veillez vous connecter en tant que super administrateur.")
-     */
+    */
     public function alouerCompte(Request $request, SerializerInterface $serializer, Utilisateur $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
         $parten = $this->getUser()->getPartenaire();
@@ -253,7 +274,7 @@ class UtilisateurController extends AbstractController
         $errors = $validator->validate($CompteUpdate);
         if (count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
-            throw new Response($errors, 500, [
+            return new Response($errors, 500, [
                 'Content-Type' => 'application/json'
             ]);
         }

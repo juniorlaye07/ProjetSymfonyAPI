@@ -56,8 +56,7 @@ class PartenaireController extends AbstractController
 //=======================================>Ajouter un partenaire<====================================£========================================================================================// 
     /**
      * @Route("partenaire", name="partenaire", methods={"POST"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
-     */
+    */
     public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
 //===========================================>Enregistrer un Prestataire<=====================================£==============================================================//
@@ -98,6 +97,7 @@ class PartenaireController extends AbstractController
 
             $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
             $user->setRoles(["ROLE_SUPER_ADMINPRESTA"]);
+            $user->setStatus(0);
             $user->setImageFile($Files);
             $user->setPartenaire($parten);
             $user->setNumeroCompte($code);
@@ -112,9 +112,10 @@ class PartenaireController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
         $data = [
             'statuts' => 201,
-            'message' => 'Le prestataire a été bien créé!'
+            'mesage' => 'Le prestataire a été bien créé!'
         ];
         return new JsonResponse($data, 201);
 
@@ -122,30 +123,50 @@ class PartenaireController extends AbstractController
 //=============================================>Bloquer un partenaire<========================£======================================================================================================//
     /**
      * @Route("partenaire/{id}", name="updatparten", methods={"PUT"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme.")
-     */
-    public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    */
+    // public function update(Request $request, SerializerInterface $serializer, Partenaire $parten, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    // {
+    //     $partenUpdate = $entityManager->getRepository(Partenaire::class)->find($parten->getId());
+    //     $data = json_decode($request->getContent());
+    //     foreach ($data as $key => $value) {
+    //         if ($key && !empty($value)) {
+    //             $status = ucfirst($key);
+    //             $setter = 'set' . $status;
+    //             $partenUpdate->$setter($value);
+    //         }
+    //     }
+    //     $errors = $validator->validate($partenUpdate);
+    //     if (count($errors)) {
+    //         $errors = $serializer->serialize($errors, 'json');
+    //         throw new Response($errors, 500, [
+    //             'Content-Type' => 'application/json'
+    //         ]);
+    //     }
+    //     $entityManager->flush();
+    //     $data = [
+    //         'statut' => 200,
+    //         'messag' => 'Le statuts du partenaire a été modifier'
+    //     ];
+    //     return new JsonResponse($data);
+    // }
+    public function updatePart(Request $request, EntityManagerInterface $part, $id)
     {
-        $partenUpdate = $entityManager->getRepository(Partenaire::class)->find($parten->getId());
-        $data = json_decode($request->getContent());
-        foreach ($data as $key => $value) {
-            if ($key && !empty($value)) {
-                $status = ucfirst($key);
-                $setter = 'set' . $status;
-                $partenUpdate->$setter($value);
-            }
+        $part = $this->getDoctrine()->getRepository(Partenaire::class)->findOneBy(['id' => $id]);
+        $users = $part->getUsers();
+        foreach ($users as $key => $value) {
+            $this->bloqueDebloqueUser($request, $part, $value->getId());
         }
-        $errors = $validator->validate($partenUpdate);
-        if (count($errors)) {
-            $errors = $serializer->serialize($errors, 'json');
-            throw new Response($errors, 500, [
-                'Content-Type' => 'application/json'
-            ]);
+        if ($part->getIsActive()) {
+            $part->setIsActive(false);
+        } else {
+            $part->setIsActive(true);
         }
-        $entityManager->flush();
+        $part = $this->getDoctrine()->getManager();
+        $part->persist($part);
+        $part->flush();
         $data = [
-            'statut' => 200,
-            'messag' => 'Le statuts du partenaire a été modifier'
+            'status' => 200,
+            'message' => 'Le statuts du partenaire a été modifier'
         ];
         return new JsonResponse($data);
     }
@@ -164,8 +185,7 @@ class PartenaireController extends AbstractController
 //==============================================>Créer un compte Partenaire<=================================================================//
     /**
      * @Route("compte", name="compte", methods={"POST"})
-     * @IsGranted({"ROLE_SUPER_ADMINSYSTEME","ROLE_ADMINSYSTEME","ROLE_CAISIER"},message="Acces Refusé! Veillez vous connecter en tant qu'administrateur systeme ou caisier.")
-     */
+    */
     public function Compte(Request $request,  EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());

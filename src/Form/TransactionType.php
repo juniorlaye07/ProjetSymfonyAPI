@@ -20,6 +20,7 @@ class TransactionType extends AbstractType
             ->add('CIN_en')
             ->add('CIN_ben')
             ->add('code')
+            ->add('montant')
             ->add('envoie')
             ->add('retrait')
             ->add('utilisateur')

@@ -23,6 +23,7 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
                     'nomBeneficiaire',
                     'telEn',
                     'telBen',
+                    'montant',
                 ],
             ],
         ],
