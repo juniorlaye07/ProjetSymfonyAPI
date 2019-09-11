@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,166 +17,221 @@ class Transaction
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"listTransac"})
      */
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $nomE;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $prenomE;
+
+    /**
+     * @ORM\Column(name="cniE",type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Vous devez insérer un numero valide")
+     * @Assert\Regex(
+     *     pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
+     *     match=true,
+     *     message="Votre numero ne doit pas contenir de lettre"
+     * )
+     * @Groups({"listTransac"})
+     */
+    private $cniE;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $nomB;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $prenomB;
+    /**
+     * @ORM\Column(name="cniB",type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Vous devez insérer un numero valide")
+     * @Assert\Regex(
+     *     pattern="/^([1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
+     *     match=true,
+     *     message="Votre numero ne doit pas contenir de lettre"
+     * )
+     * @Groups({"listTransac"})
+     */
+    private $cniB;
+
+    /**
      * @ORM\Column(type="datetime")
+     * @Groups({"listTransac"})
      */
-    private $date_trans;
+    private $dateTrans;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
-     * @Assert\NotBlank(message="Vous devez insérer un mot de passe")
-     * @Assert\Regex(
-     *     pattern="/(?=.*[a-z])(?=.*)(?=.*\d)(?=.*[#$^+=!*()@%&]).{13,}$/",
-     *     match=true,
-     *     message="Votre mot de passe doit contenir au moins 13 caractères"
-     * )
+     * @Groups({"listTransac"})
      */
-    private $CIN_en;
+    private $envoi;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
-     * @Assert\NotBlank(message="Vous devez insérer un mot de passe")
-     * @Assert\Regex(
-     *     pattern="/(?=.*[a-z])(?=.*)(?=.*\d)(?=.*[#$^+=!*()@%&]).{13,}$/",
-     *     match=true,
-     *     message="Votre mot de passe doit contenir au moins 13 caractères"
-     * )
-     */
-    private $CIN_ben;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
-     * @Assert\NotBlank(message="Vous devez insérer un code")
-     * @Assert\Regex(
-     *     pattern="/(?=.*[a-z])(?=.*)(?=.*\d)(?=.*[#$^+=!*()@%&]).{9,}$/",
-     *     match=true,
-     *     message="Votre code doit contenir au moins 9 caractères"
-     * )
-     */
-    private $code;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *  @Assert\NotBlank(message="Veillez bien renseigner les champs")
-     */
-    private $envoie;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *  @Assert\NotBlank(message="Veillez bien renseigner les champs")
+     * @Groups({"listTransac"})
      */
     private $retrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="transactions")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"listTransac"})
      */
-    private $utilisateur;
+    private $user;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $nomEnvoyeur;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $nomBeneficiaire;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
+     * @ORM\Column(name="telephoneE",type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Vous devez insérer un téléphone")
      * @Assert\Regex(
      *     pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
      *     match=true,
-     *     message="Votre numero de téléphone ne doit pas contenir de lettres"
+     *     message="Votre numero ne doit pas contenir de lettre"
      * )
+     * @Groups({"listTransac"})
      */
-    private $tel_en;
+    private $telephoneE;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Veillez bien renseigner les champs")
+     * @ORM\Column(name="telephoneB",type="string", length=255, unique=true, nullable=true)
+     * @Assert\NotBlank(message="Vous devez insérer un téléphone")
      * @Assert\Regex(
      *     pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/",
      *     match=true,
-     *     message="Votre numero de téléphone ne doit pas contenir de lettres"
+     *     message="Votre numero ne doit pas contenir de lettre"
      * )
+     * @Groups({"listTransac"})
      */
-    private $tel_ben;
+    private $telephoneB;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"listTransac"})
      */
     private $montant;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $montantpaye;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listTransac"})
+     */
+    private $codeTrans;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    public function getNomE(): ?string
+    {
+        return $this->nomE;
+    }
+
+    public function setNomE(?string $nomE): self
+    {
+        $this->nomE = $nomE;
+
+        return $this;
+    }
+
+    public function getPrenomE(): ?string
+    {
+        return $this->prenomE;
+    }
+
+    public function setPrenomE(?string $prenomE): self
+    {
+        $this->prenomE = $prenomE;
+
+        return $this;
+    }
+
+    public function getCniE(): ?string
+    {
+        return $this->cniE;
+    }
+
+    public function setCniE(?string $cniE): self
+    {
+        $this->cniE = $cniE;
+
+        return $this;
+    }
+
+    public function getNomB(): ?string
+    {
+        return $this->nomB;
+    }
+
+    public function setNomB(?string $nomB): self
+    {
+        $this->nomB = $nomB;
+
+        return $this;
+    }
+
+    public function getPrenomB(): ?string
+    {
+        return $this->prenomB;
+    }
+
+    public function setPrenomB(?string $prenomB): self
+    {
+        $this->prenomB = $prenomB;
+
+        return $this;
+    }
+
+    public function getCniB(): ?string
+    {
+        return $this->cniB;
+    }
+
+    public function setCniB(?string $cniB): self
+    {
+        $this->cniB = $cniB;
+
+        return $this;
+    }
+
     public function getDateTrans(): ?\DateTimeInterface
     {
-        return $this->date_trans;
+        return $this->dateTrans;
     }
 
-    public function setDateTrans(\DateTimeInterface $date_trans): self
+    public function setDateTrans(\DateTimeInterface $dateTrans): self
     {
-        $this->date_trans = $date_trans;
+        $this->dateTrans = $dateTrans;
 
         return $this;
     }
 
-    public function getCINEn(): ?string
+    public function getEnvoi(): ?string
     {
-        return $this->CIN_en;
+        return $this->envoi;
     }
 
-    public function setCINEn(?string $CIN_en): self
+    public function setEnvoi(?string $envoi): self
     {
-        $this->CIN_en = $CIN_en;
-
-        return $this;
-    }
-
-    public function getCINBen(): ?string
-    {
-        return $this->CIN_ben;
-    }
-
-    public function setCINBen(?string $CIN_ben): self
-    {
-        $this->CIN_ben = $CIN_ben;
-
-        return $this;
-    }
-
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): self
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    public function getEnvoie(): ?string
-    {
-        return $this->envoie;
-    }
-
-    public function setEnvoie(?string $envoie): self
-    {
-        $this->envoie = $envoie;
+        $this->envoi = $envoi;
 
         return $this;
     }
@@ -192,74 +248,74 @@ class Transaction
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getNomEnvoyeur(): ?string
+    public function getTelephoneE(): ?string
     {
-        return $this->nomEnvoyeur;
+        return $this->telephoneE;
     }
 
-    public function setNomEnvoyeur(?string $nomEnvoyeur): self
+    public function setTelephoneE(?string $telephoneE): self
     {
-        $this->nomEnvoyeur = $nomEnvoyeur;
+        $this->telephoneE = $telephoneE;
 
         return $this;
     }
 
-    public function getNomBeneficiaire(): ?string
+    public function getTelephoneB(): ?string
     {
-        return $this->nomBeneficiaire;
+        return $this->telephoneB;
     }
 
-    public function setNomBeneficiaire(?string $nomBeneficiaire): self
+    public function setTelephoneB(string $telephoneB): self
     {
-        $this->nomBeneficiaire = $nomBeneficiaire;
+        $this->telephoneB = $telephoneB;
 
         return $this;
     }
 
-    public function getTelEn(): ?string
-    {
-        return $this->tel_en;
-    }
-
-    public function setTelEn(?string $tel_en): self
-    {
-        $this->tel_en = $tel_en;
-
-        return $this;
-    }
-
-    public function getTelBen(): ?string
-    {
-        return $this->tel_ben;
-    }
-
-    public function setTelBen(?string $tel_ben): self
-    {
-        $this->tel_ben = $tel_ben;
-
-        return $this;
-    }
-
-    public function getMontant(): ?string
+    public function getMontant(): ?int
     {
         return $this->montant;
     }
 
-    public function setMontant(?string $montant): self
+    public function setMontant(?int $montant): self
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getMontantpaye(): ?int
+    {
+        return $this->montantpaye;
+    }
+
+    public function setMontantpaye(?int $montantpaye): self
+    {
+        $this->montantpaye = $montantpaye;
+
+        return $this;
+    }
+
+    public function getCodeTrans(): ?string
+    {
+        return $this->codeTrans;
+    }
+
+    public function setCodeTrans(?string $codeTrans): self
+    {
+        $this->codeTrans = $codeTrans;
 
         return $this;
     }

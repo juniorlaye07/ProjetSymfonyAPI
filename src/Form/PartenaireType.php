@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Partenaire;
+use App\Entity\Partenaires;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,15 +15,15 @@ class PartenaireType extends AbstractType
             ->add('ninea')
             ->add('raison_social')
             ->add('adresse')
+            ->add('telephone')
             ->add('email')
-            ->add('tel')
-            
         ;
     }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Partenaire::class,
+            'data_class' => Partenaires::class,
         ]);
     }
 }

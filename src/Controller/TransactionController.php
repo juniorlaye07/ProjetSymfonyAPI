@@ -6,6 +6,7 @@ use App\Entity\Tarifs;
 use App\Entity\Commission;
 use App\Entity\Transaction;
 use App\Entity\ComptBancaire;
+use App\Entity\Retrait;
 use App\Form\TransactionType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TransactionRepository;
@@ -66,56 +67,52 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("/trans", name="transaction_new", methods={"GET","POST"})
+     * @Route("/transaction", name="transaction_new", methods={"GET","POST"})
      */
     public function new(Request  $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $commi = new Commission();
         $transaction = new Transaction();
+        $retrait=new Retrait();
         $form = $this->createForm(TransactionType::class, $transaction);
         $form->handleRequest($request);
         $Values = $request->request->all();
         $form->submit($Values);
 
-         //recupere le numero du compte bancaire
+         
          $part = $this->getUser()->getCompteBancaire();
-         //on recupere le montant qui est dans ce compte
+         
          $repo = $this->getDoctrine()->getRepository(ComptBancaire::class);
          $numcompt = $repo->findOneBy(['numCompt' => $part]);
          $val = $numcompt->getSolde();
+        
          $repo = $this->getDoctrine()->getRepository(Tarifs::class);
          $tar = $repo->findAll();
-            //recuper  l'utilisateur qui fait le transaction
+         
             $user = $this->getUser();
 
             $type = $Values['type'];
             
-            if ($montant < $val) {
-                foreach ($tar as $value) {
-                    $min = $value->getBorneInferieur();
-                    $max = $value->getBorneSuperieur();
-                    if (($min <= $montant) && ($montant >= $max)) {
-                        $com = $value->getValeur();
-                    }
-                }
-            $etat = (($com * 30) / 100);
-            $envoye = (($com * 10) / 100);
-            $retrait = (($com * 20) / 100);
-            $system = (($com * 40) / 100);
-
-         $code = date('s') . date('m') . date('d') . date('y') . date('m');
-      
-
-        $transaction->setDateTrans(new \DateTime());
-        $transaction->setUser($user);
-        $montant = $Values['montant'];
-        $montantpaye = $Values['montantpayer'];
-        $transaction->setMontantpaye($montantpaye);
-       
-        //on compare le montant qu'on veut recuperer et le montant qui existe dans le compte
-     
-      
             if ($type == '1') {
+                $montant = $Values['montant'];
+                if ($montant < $val) {
+                    foreach ($tar as $value) {
+                        $min = $value->getBorneInferieur();
+                        $max = $value->getBorneSuperieur();
+                        if (($min <= $montant) && ($montant >= $max)) {
+                            $com = $value->getValeur();
+                        }
+                    }
+                $etat = ($com * 0.3);
+                $envoye = ($com * 0.1);
+                $comretrait = (($com * 20) / 100);
+                $system = (($com * 40) / 100);
+    
+             $code = date('d') . date('m') . date('y') . date('s') . date('m');
+             $transaction->setDateTrans(new \DateTime());
+             $transaction->setUser($user);   
+            
+
                 $transaction->setMontant($montant);
                 $transaction->setCodeTrans($code);
                 $numcompt->setSolde($numcompt->getSolde() - $montant);
@@ -125,37 +122,62 @@ class TransactionController extends AbstractController
                 $commi->setPartenaire($system);
                 $commi->setEtat($etat);
                 $commi->setEnvoi($envoye);
-                $commi->setRetrait($retrait);
+                $commi->setRetrait($comretrait);
                 $commi->setDate(new \DateTime());
                 $entityManager->persist($commi);
             }
-            if ($type == '2') {
-                $coderetrait = $Values['code'];
-                var_dump($coderetrait);
-                die();
-                $repo = $this->getDoctrine()->getRepository(Transaction::class);
-                $trans = $repo->findOneBy(['code' => $coderetrait]);
-                var_dump($trans);
-                die();
-                $transaction->setCode($trans);
-
-                //incrementant du solde du partenaire du montant du depot
-                $numcompt->setSolde($numcompt->getSolde() + $montant);
-                $numcompt->setSolde($numcompt->getSolde() + $retrait);
-                $transaction->setTypeTrans('Retrait');
-            }
-        } else {
+                
+         else {
 
             $data = [
-                'STATUS' => 201,
+                'STATUS' =>400,
                 'MESSAGE' => 'votre sole ne vous permet pas deffectuer cette transaction',
             ];
-            return new JsonResponse($data, 201);
+            return new JsonResponse($data, 400);
         }
+        $entityManager->persist($transaction);
 
+    }
+            if ($type == '2') {
+                $coderetrait = $Values['code'];
+                $cniB = $Values['cniB'];
+                $repo = $this->getDoctrine()->getRepository(Transaction::class);
+                $trans = $repo->findOneBy(['codeTrans'=> $coderetrait]);
+                $coderetrait=$trans->getCodeTrans();
+                $montantreti=$trans->getMontant();
+                
+                if($trans->getRetrait()=='Retrait'){
+                    $data = [
+                        'STATU' => 400,
+                        'MESSAG' => 'Desoler ce code est deja utiliser ',
+                    ];
+                    return new JsonResponse($data, 400);
+                }
+                else{
+                    foreach ($tar as $value) {
+                        $min = $value->getBorneInferieur();
+                        $max = $value->getBorneSuperieur();
+                        if (($min <= $montantreti) && ($montantreti >= $max)) {
+                            $com = $value->getValeur();
+                        }
+                    }
+                $comretrait = (($com * 20) / 100);
+    
+                    $retrait->setTransaction($trans);
+                    $retrait->setCode($coderetrait);     
+                    $retrait->setDateRetrait(new \DateTime());
+                    $retrait->setUser($user);
+                    $entityManager->persist($retrait);
 
+                    
+                $numcompt->setSolde($numcompt->getSolde() + $montantreti);
+                $numcompt->setSolde($numcompt->getSolde() + $comretrait);
+                $trans->setRetrait('Retrait');
+                $trans->setCniB($cniB);
 
-
+                }
+               
+            }    
 
         $errors = $validator->validate($user);
         if (count($errors)) {
@@ -164,7 +186,6 @@ class TransactionController extends AbstractController
                 'Content-Type' => 'application/json'
             ]);
         }
-        $entityManager->persist($transaction);
         $entityManager->flush();
 
 
@@ -174,49 +195,35 @@ class TransactionController extends AbstractController
             'MESSAGE' => 'La transaction a ete bien effectuer',
         ];
         return new JsonResponse($data, 201);
-    }
+    
+}
 
     /**
-     * @Route("/{id}", name="transaction_show", methods={"GET"})
+     * @Route("/listransac", name="show-transaction", methods={"GET"})
      */
-    public function show(Transaction $transaction): Response
+    public function show(Request  $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
-        return $this->render('transaction/show.html.twig', [
-            'transaction' => $transaction,
-        ]);
-    }
+        $user=$this->getUser()->getId();
+        $repo = $this->getDoctrine()->getRepository(Transaction::class);
+        $reposy = $this->getDoctrine()->getRepository(Retrait::class);
 
-    /**
-     * @Route("/{id}/edit", name="transaction_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Transaction $transaction): Response
-    {
-        $form = $this->createForm(TransactionType::class, $transaction);
-        $form->handleRequest($request);
+        $trans = $repo->findOneBy(['user'=> $user]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        $tr = $reposy->findOneBy(['user' => $user]);
 
-            return $this->redirectToRoute('transaction_index');
+        if ($repo->findOneBy(['user' => $user])) {
+            $dat = $serializer->serialize($trans, 'json', [
+                'groups' => ['listTransac']
+            ]);
         }
-
-        return $this->render('transaction/edit.html.twig', [
-            'transaction' => $transaction,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="transaction_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Transaction $transaction): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $transaction->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($transaction);
-            $entityManager->flush();
+        if ($reposy->findOneBy(['user' => $user])) {
+            $dat = $serializer->serialize($tr, 'json', [
+                'groups' => ['listTransac']
+            ]);
         }
+        return new Response($dat, 200, [
+            'Content-Type' => 'application/json'
+        ]);
 
-        return $this->redirectToRoute('transaction_index');
     }
 }

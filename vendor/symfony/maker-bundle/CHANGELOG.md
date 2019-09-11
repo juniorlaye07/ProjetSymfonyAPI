@@ -1,3 +1,12 @@
+1.13
+====
+
+* [make:functional-test] Use Panther when available - #417
+  thanks to @adrienlucas
+
+* Allow rehashing passwords when possible and needed - #389
+  thanks to @nicolas-grekas
+
 1.12
 ====
 
@@ -20,7 +29,7 @@
   in #406 thanks to @St0iK
 
 * Use new event class names instead of strings in `make:event-subscriber` -
-  in #403 thanks to jojotjebaby
+  in #403 thanks to @jojotjebaby
 
 1.11
 ====

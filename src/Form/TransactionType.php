@@ -12,18 +12,17 @@ class TransactionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom_en')
-            ->add('prenom_en')
-            ->add('nom_ben')
-            ->add('prenom_ben')
-            ->add('date_trans')
-            ->add('CIN_en')
-            ->add('CIN_ben')
-            ->add('code')
-            ->add('montant')
-            ->add('envoie')
-            ->add('retrait')
-            ->add('utilisateur')
+            ->add('nomE')
+            ->add('prenomE')
+            ->add('cniE')
+            ->add('nomB')
+            ->add('prenomB')
+            ->add('cniB')
+            ->add('telephoneE')
+            ->add('telephoneB')
+            ->add('montantPaye')
+
+
         ;
     }
 
@@ -31,6 +30,8 @@ class TransactionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Transaction::class,
+            'csrf_protection'=>false
+
         ]);
     }
 }

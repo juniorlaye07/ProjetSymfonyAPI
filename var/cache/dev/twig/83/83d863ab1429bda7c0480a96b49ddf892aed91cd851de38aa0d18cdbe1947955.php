@@ -140,6 +140,6 @@ class __TwigTemplate_e171eae83f214a7505e8ea36179e7ea0c91f616fd394ca2afa3c859f04e
 
     {{ include('transaction/_delete_form.html.twig') }}
 {% endblock %}
-", "transaction/edit.html.twig", "/home/juniorlaye/APIprojet/templates/transaction/edit.html.twig");
+", "transaction/edit.html.twig", "/home/juniorlaye/ProjetAPISymfony/templates/transaction/edit.html.twig");
     }
 }

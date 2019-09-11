@@ -79,6 +79,6 @@ class __TwigTemplate_6a9edb6635f344a2d53fd4e3a71d19808dc5fb5df468d009a0e5271624e
 {{ status_code }} {{ status_text }}
 
 */
-", "@Twig/Exception/error.js.twig", "/home/juniorlaye/APIprojet/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
+", "@Twig/Exception/error.js.twig", "/home/juniorlaye/ProjetAPISymfony/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
     }
 }

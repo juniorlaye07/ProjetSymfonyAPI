@@ -81,6 +81,6 @@ class __TwigTemplate_c3af613a9dace9acc1ff203572e0e7f366db41ca7737f75d2afa7a42864
     <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('delete' ~ transaction.id) }}\">
     <button class=\"btn\">Delete</button>
 </form>
-", "transaction/_delete_form.html.twig", "/home/juniorlaye/APIprojet/templates/transaction/_delete_form.html.twig");
+", "transaction/_delete_form.html.twig", "/home/juniorlaye/ProjetAPISymfony/templates/transaction/_delete_form.html.twig");
     }
 }

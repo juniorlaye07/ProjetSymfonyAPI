@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\TarifsRepository")
  */
 class Tarifs
@@ -19,57 +17,57 @@ class Tarifs
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $BorneInf;
+    private $borneInferieur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $BorneSup;
+    private $borneSuperieur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $Valeurs;
+    private $valeur;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBorneInf(): ?string
+    public function getBorneInferieur(): ?int
     {
-        return $this->BorneInf;
+        return $this->borneInferieur;
     }
 
-    public function setBorneInf(string $BorneInf): self
+    public function setBorneInferieur(int $borneInferieur): self
     {
-        $this->BorneInf = $BorneInf;
+        $this->borneInferieur = $borneInferieur;
 
         return $this;
     }
 
-    public function getBorneSup(): ?string
+    public function getBorneSuperieur(): ?int
     {
-        return $this->BorneSup;
+        return $this->borneSuperieur;
     }
 
-    public function setBorneSup(string $BorneSup): self
+    public function setBorneSuperieur(int $borneSuperieur): self
     {
-        $this->BorneSup = $BorneSup;
+        $this->borneSuperieur = $borneSuperieur;
 
         return $this;
     }
 
-    public function getValeurs(): ?string
+    public function getValeur(): ?int
     {
-        return $this->Valeurs;
+        return $this->valeur;
     }
 
-    public function setValeurs(string $Valeurs): self
+    public function setValeur(int $valeur): self
     {
-        $this->Valeurs = $Valeurs;
+        $this->valeur = $valeur;
 
         return $this;
     }

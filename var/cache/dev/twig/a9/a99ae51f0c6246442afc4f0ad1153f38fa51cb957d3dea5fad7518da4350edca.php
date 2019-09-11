@@ -63,6 +63,6 @@ class __TwigTemplate_783bbeefece364a0004f3ab4c54e7e3935e0abb018eb88a330e40a4f183
     public function getSourceContext()
     {
         return new Source("<?php echo \$view['form']->block(\$form, 'choice_widget_options') ?>
-", "@Framework/Form/choice_options.html.php", "/home/juniorlaye/APIprojet/vendor/symfony/framework-bundle/Resources/views/Form/choice_options.html.php");
+", "@Framework/Form/choice_options.html.php", "/home/juniorlaye/ProjetAPISymfony/vendor/symfony/framework-bundle/Resources/views/Form/choice_options.html.php");
     }
 }

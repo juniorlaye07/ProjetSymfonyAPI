@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\DepotRepository")
  */
 class Depot
@@ -16,76 +20,84 @@ class Depot
      */
     private $id;
 
+
+
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date_depot;
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="bigint")
+     * @Assert\Range(min="75000",minMessage="La valeur minimum autorisée est {{ limit }}")
+     * @Groups({"listparten"})
      */
     private $montant;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="depots")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="datetime")
+     * @Groups({"listparten"})
      */
-    private $caisier;
+    private $dateDepot;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="depots")
+     * @Groups({"listparten"})
      */
-    private $numero_compte;
+    private $cassier;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ComptBancaire", inversedBy="depots")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"listparten"})
+     */
+    private $numeroCompt;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateDepot(): ?\DateTimeInterface
-    {
-        return $this->date_depot;
-    }
 
-    public function setDateDepot(\DateTimeInterface $date_depot): self
-    {
-        $this->date_depot = $date_depot;
-
-        return $this;
-    }
-    public function getMontant(): ?string
+    public function getMontant(): ?int
     {
         return $this->montant;
     }
 
-    public function setMontant(string $montant): self
+    public function setMontant(int $montant): self
     {
         $this->montant = $montant;
 
         return $this;
     }
 
-    public function getCaisier(): ?Utilisateur
+    public function getDateDepot(): ?\DateTimeInterface
     {
-        return $this->caisier;
+        return $this->dateDepot;
     }
 
-    public function setCaisier(?Utilisateur $caisier): self
+    public function setDateDepot(\DateTimeInterface $dateDepot): self
     {
-        $this->caisier = $caisier;
+        $this->dateDepot = $dateDepot;
 
         return $this;
     }
 
-    public function getNumeroCompte(): ?Compte
+    public function getCassier(): ?User
     {
-        return $this->numero_compte;
+        return $this->cassier;
     }
 
-    public function setNumeroCompte(?Compte $numero_compte): self
+    public function setCassier(?User $cassier): self
     {
-        $this->numero_compte = $numero_compte;
+        $this->cassier = $cassier;
+
+        return $this;
+    }
+
+    public function getNumeroCompt(): ?ComptBancaire
+    {
+        return $this->numeroCompt;
+    }
+
+    public function setNumeroCompt(?ComptBancaire $numeroCompt): self
+    {
+        $this->numeroCompt = $numeroCompt;
 
         return $this;
     }

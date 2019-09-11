@@ -277,25 +277,29 @@ class __TwigTemplate_dea99e109d606a4e5407cd988f022ff537745abb005c0dd31fc9b8b788f
             $context['_parent'] = $context;
             $context['_seq'] = twig_ensure_traversable(twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 167, $this->source); })()), "resourceMetadata", [], "any", false, false, false, 167), "attributes", [], "any", false, false, false, 167));
             foreach ($context['_seq'] as $context["key"] => $context["value"]) {
+                // line 168
+                echo "                                ";
                 if (($context["key"] != "filters")) {
-                    // line 168
-                    echo "                                <tr>
-                                    <th scope=\"row\">";
                     // line 169
+                    echo "                                    <tr>
+                                        <th scope=\"row\">";
+                    // line 170
                     echo twig_escape_filter($this->env, $context["key"], "html", null, true);
                     echo "</th>
-                                    <td>";
-                    // line 170
+                                        <td>";
+                    // line 171
                     echo $this->extensions['Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension']->dumpData($this->env, $context["value"], 2);
                     echo "</td>
-                                </tr>
-                            ";
+                                    </tr>
+                                ";
                 }
+                // line 174
+                echo "                            ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['key'], $context['value'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 173
+            // line 175
             echo "                        </tbody>
                     </table>
                 </div>
@@ -304,16 +308,16 @@ class __TwigTemplate_dea99e109d606a4e5407cd988f022ff537745abb005c0dd31fc9b8b788f
                 <h3 class=\"tab-title\">Data Providers</h3>
                 <div class=\"tab-content\">
                     ";
-            // line 180
-            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 180, $this->source); })()), "collectionDataProviders", [], "any", false, false, false, 180), "collection data provider"], 180, $context, $this->getSourceContext());
-            echo "
-                    ";
-            // line 181
-            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 181, $this->source); })()), "itemDataProviders", [], "any", false, false, false, 181), "item data provider"], 181, $context, $this->getSourceContext());
-            echo "
-                    ";
             // line 182
-            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 182, $this->source); })()), "subresourceDataProviders", [], "any", false, false, false, 182), "subresource data provider"], 182, $context, $this->getSourceContext());
+            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 182, $this->source); })()), "collectionDataProviders", [], "any", false, false, false, 182), "collection data provider"], 182, $context, $this->getSourceContext());
+            echo "
+                    ";
+            // line 183
+            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 183, $this->source); })()), "itemDataProviders", [], "any", false, false, false, 183), "item data provider"], 183, $context, $this->getSourceContext());
+            echo "
+                    ";
+            // line 184
+            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 184, $this->source); })()), "subresourceDataProviders", [], "any", false, false, false, 184), "subresource data provider"], 184, $context, $this->getSourceContext());
             echo "
                 </div>
             </div>
@@ -321,8 +325,8 @@ class __TwigTemplate_dea99e109d606a4e5407cd988f022ff537745abb005c0dd31fc9b8b788f
                 <h3 class=\"tab-title\">Data Persisters</h3>
                 <div class=\"tab-content\">
                     ";
-            // line 188
-            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 188, $this->source); })()), "dataPersisters", [], "any", false, false, false, 188), "data persister"], 188, $context, $this->getSourceContext());
+            // line 190
+            echo twig_call_macro($macros["apiPlatform"], "macro_providerTable", [twig_get_attribute($this->env, $this->source, (isset($context["collector"]) || array_key_exists("collector", $context) ? $context["collector"] : (function () { throw new RuntimeError('Variable "collector" does not exist.', 190, $this->source); })()), "dataPersisters", [], "any", false, false, false, 190), "data persister"], 190, $context, $this->getSourceContext());
             echo "
                 </div>
             </div>
@@ -625,7 +629,7 @@ $context["answer"] === false)) {
 
     public function getDebugInfo()
     {
-        return array (  600 => 73,  593 => 69,  588 => 66,  586 => 65,  583 => 64,  566 => 61,  563 => 60,  559 => 58,  555 => 56,  553 => 55,  550 => 54,  548 => 53,  543 => 51,  540 => 50,  523 => 49,  516 => 45,  509 => 40,  503 => 37,  500 => 36,  497 => 35,  477 => 34,  460 => 30,  450 => 26,  446 => 24,  438 => 22,  433 => 21,  424 => 15,  419 => 12,  416 => 11,  395 => 10,  373 => 6,  365 => 5,  362 => 4,  341 => 3,  325 => 188,  316 => 182,  312 => 181,  308 => 180,  299 => 173,  289 => 170,  285 => 169,  282 => 168,  277 => 167,  263 => 155,  252 => 149,  245 => 146,  239 => 144,  235 => 142,  233 => 141,  229 => 140,  221 => 138,  218 => 137,  213 => 136,  201 => 127,  197 => 126,  193 => 125,  187 => 121,  185 => 120,  177 => 115,  173 => 113,  163 => 112,  148 => 106,  142 => 104,  140 => 103,  130 => 102,  118 => 99,  115 => 98,  112 => 97,  106 => 94,  102 => 92,  100 => 91,  95 => 89,  91 => 87,  89 => 86,  86 => 85,  79 => 82,  76 => 81,  73 => 80,  63 => 79,  52 => 1,  50 => 77,  37 => 1,);
+        return array (  604 => 73,  597 => 69,  592 => 66,  590 => 65,  587 => 64,  570 => 61,  567 => 60,  563 => 58,  559 => 56,  557 => 55,  554 => 54,  552 => 53,  547 => 51,  544 => 50,  527 => 49,  520 => 45,  513 => 40,  507 => 37,  504 => 36,  501 => 35,  481 => 34,  464 => 30,  454 => 26,  450 => 24,  442 => 22,  437 => 21,  428 => 15,  423 => 12,  420 => 11,  399 => 10,  377 => 6,  369 => 5,  366 => 4,  345 => 3,  329 => 190,  320 => 184,  316 => 183,  312 => 182,  303 => 175,  297 => 174,  291 => 171,  287 => 170,  284 => 169,  281 => 168,  277 => 167,  263 => 155,  252 => 149,  245 => 146,  239 => 144,  235 => 142,  233 => 141,  229 => 140,  221 => 138,  218 => 137,  213 => 136,  201 => 127,  197 => 126,  193 => 125,  187 => 121,  185 => 120,  177 => 115,  173 => 113,  163 => 112,  148 => 106,  142 => 104,  140 => 103,  130 => 102,  118 => 99,  115 => 98,  112 => 97,  106 => 94,  102 => 92,  100 => 91,  95 => 89,  91 => 87,  89 => 86,  86 => 85,  79 => 82,  76 => 81,  73 => 80,  63 => 79,  52 => 1,  50 => 77,  37 => 1,);
     }
 
     public function getSourceContext()
@@ -796,11 +800,13 @@ $context["answer"] === false)) {
                         </thead>
 
                         <tbody>
-                            {% for key, value in collector.resourceMetadata.attributes if key != 'filters' %}
-                                <tr>
-                                    <th scope=\"row\">{{ key }}</th>
-                                    <td>{{- profiler_dump(value, 2) -}}</td>
-                                </tr>
+                            {% for key, value in collector.resourceMetadata.attributes %}
+                                {% if key != 'filters' %}
+                                    <tr>
+                                        <th scope=\"row\">{{ key }}</th>
+                                        <td>{{- profiler_dump(value, 2) -}}</td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -823,6 +829,6 @@ $context["answer"] === false)) {
         </div>
     {% endif %}
 {% endblock %}
-", "@ApiPlatform/DataCollector/request.html.twig", "/home/juniorlaye/APIprojet/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
+", "@ApiPlatform/DataCollector/request.html.twig", "/home/juniorlaye/ProjetAPISymfony/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/DataCollector/request.html.twig");
     }
 }
