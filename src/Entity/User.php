@@ -74,7 +74,6 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaires", inversedBy="users")
-     * @Groups({"listUsers"})
      */
     private $partenaire;
 
@@ -119,6 +118,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
+     * @Groups({"listUsers","listparten"})
      */
     private $compteBancaire;
 
@@ -134,6 +134,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"listUsers","listparten"})
      */
     private $status;
 

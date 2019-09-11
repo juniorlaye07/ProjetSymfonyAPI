@@ -34,7 +34,7 @@ class UserController extends AbstractController
     }
     //===================================================>Login<==============================£===============================================================================================//
     /**
-     * @Route("/login", name="loginch", methods={"POST"})
+     * @Route("/login", name="login", methods={"POST"})
      * @param Request $request
      * @param JWTEncoderInterface $JWTEncoder
      * @return JsonResponse
@@ -48,8 +48,8 @@ class UserController extends AbstractController
         if (!$user) 
         {
             $dat = [
-                'stat0' => 400,
-                'mesges' => 'Nom d\'Utilisateur incorrect'
+                'status0' => 400,
+                'messages1' => 'Nom d\'Utilisateur incorrect'
             ];
             return new JsonResponse($dat, 400);
         }
@@ -58,8 +58,8 @@ class UserController extends AbstractController
         {
 
             $dat = [
-                'stat0' => 400,
-                'mesges' => 'Mot de passe incorrect!'
+                'status1' => 400,
+                'messages2' => 'Mot de passe incorrect!'
             ];
             return new JsonResponse($dat, 400);
         }
@@ -75,23 +75,23 @@ class UserController extends AbstractController
        if ($partenstat =='Bloquer' && $profil==['ROLE_ADMIN_PRS']) 
        {
            $data = [
-               'stat' => 400,
-               'messge' => 'Accés refusé! votre prestataire a été bloqué.'
+               'status3' => 400,
+               'messages3' => 'Accés refusé! votre prestataire a été bloqué.'
            ];
            return new JsonResponse($data, 400);
        }
        elseif ($partenstat == 'Actif' &&  $statuser == 'Bloquer')
        {
            $data = [
-               'stat' => 400,
-               'mesge' => 'Votre accés est refusé,veillez vous adressez à votre administrateur!'
+               'status4' => 400,
+               'messages4' => 'Votre accés est refusé,veillez vous adressez à votre administrateur!'
            ];
            return new JsonResponse($data, 400);
        }
        elseif($statuser == 'Bloquer'){
            $dat= [
-               'stat' => 400,
-               'mesge' => 'Votre accés est refusé,veillez vous adressez à votre administrateur!'
+               'status5' => 400,
+               'messages5' => 'Votre accés est refusé,veillez vous adressez à votre administrateur!'
            ];
            return new JsonResponse($dat, 400);
        }
@@ -107,11 +107,11 @@ class UserController extends AbstractController
     }
        elseif($profil==['ROLE_CAISIER']) {
             $statuser = $user->getStatus();
-        if ($statuser =='Bloque') 
+        if ($statuser =='Bloquer') 
         {
             $data = [
-                'stat' => 400,
-                'messge' => 'Accés refusé! votre avez  été bloqué.'
+                'status6' => 400,
+                'messages6' => 'Accés refusé! votre status a été bloqué.'
             ];
             return new JsonResponse($data, 400);
         }
@@ -170,8 +170,8 @@ class UserController extends AbstractController
                 break;
             default:
                 $data = [
-                    'statuts' => 400,
-                    'message' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
+                    'statuts7' => 400,
+                    'messages7' => 'Ce profil n\'existe pas,veillez réctifier votre profil!'
                 ];
                 return new JsonResponse($data, 400);
         }
@@ -192,8 +192,8 @@ class UserController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $data = [
-                  'statut' => 201,
-                  'massage' => 'L\'utilisateur a été bien enregistrer!'
+                  'statut8' => 201,
+                  'massages8' => 'L\'utilisateur a été bien enregistrer!'
                 ];
                 return new JsonResponse($data, 201);
 
@@ -203,7 +203,7 @@ class UserController extends AbstractController
 //==============================================Allouer un compte=======================================================
     /**
      * @Route("/UpdateCompte/{id}", name="Allouer", methods={"PUT","GET"})
-     * @IsGranted({"ROLE_ADMIN"},message="vous n'etes pas autoriser a ajouter des utilisateur")
+     * @IsGranted({"ROLE_ADMIN_PRS"},message="vous n'etes pas autoriser a ajouter des utilisateur")
 
      */
     public function allouerCompte(Request $request, SerializerInterface $serializer, User $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -233,26 +233,50 @@ class UserController extends AbstractController
         }
         $entityManager->flush();
         $data = [
-            'statu' => 200,
-            'messag' => 'Votre compte a ete bien allouer à votre utilisateur!',
+            'status9' => 200,
+            'messages9' => 'Votre compte a ete bien allouer à votre utilisateur!',
         ];
 
         return new JsonResponse($data);
     }
 //============================================Liste Users=======================================================================
      /**
-      * @Route("/listeUsers/{id}", name="listeUserr", methods={"GET"})
+      * @Route("/listeUsers", name="listeUserr", methods={"GET"})
       */
-    public function listeuser(UserRepository $userRepo, SerializerInterface $serializer,EntityManagerInterface $entityManager){
-        
-        $listUser= $entityManager->getRepository(User::class);
-        $users = $listUser->findAll();
+
+    public function listeuser(Request  $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    {
+        $usr = $this->getUser()->getRoles();
        
-        $jsonObject = $serializer->serialize($users, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
+        $user = [];
+        $repo = $this->getDoctrine()->getRepository(User::class);
+        $trans = $repo->findAll();
+
+        if ($usr == ['ROLE_ADMIN_PRS']) {
+            foreach ($trans as $value) {
+
+                if ($value->getRoles() == ['ROLE_USERs']) {
+                    $user[] = $value;
+                }
             }
+        }else if ($usr == ['ROLE_SUPER_ADMIN']) {
+
+            foreach ($trans as $value) {
+
+                if ($value->getRoles() == ['ROLE_CAISIER']) {
+                    $user[] = $value;
+                }
+            }
+        }
+
+        $dat = $serializer->serialize($user, 'json', [
+            'groups' => ['listUsers']
+
         ]);
-        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
+
+
+        return new Response($dat, 200, [
+            'Content-Type' => 'application/json'
+        ]);
     }
 }

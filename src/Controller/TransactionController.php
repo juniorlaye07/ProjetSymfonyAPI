@@ -29,7 +29,7 @@ use Dompdf\Options;
 class TransactionController extends AbstractController
 {
     /**
-     * @Route("/tra", name="transaction_index", methods={"GET"})
+     * @Route("/contrat", name="transaction_contrat", methods={"GET"})
      */
     public function index(TransactionRepository $transactionRepository): Response
     {
@@ -130,8 +130,8 @@ class TransactionController extends AbstractController
          else {
 
             $data = [
-                'STATUS' =>400,
-                'MESSAGE' => 'votre sole ne vous permet pas deffectuer cette transaction',
+                'Statut0' =>400,
+                'message0' => 'votre sole ne vous permet pas deffectuer cette transaction',
             ];
             return new JsonResponse($data, 400);
         }
@@ -148,8 +148,8 @@ class TransactionController extends AbstractController
                 
                 if($trans->getRetrait()=='Retrait'){
                     $data = [
-                        'STATU' => 400,
-                        'MESSAG' => 'Desoler ce code est deja utiliser ',
+                        'status1' => 400,
+                        'message2' => 'Ce code est dèjà utiliser,veillez réctifier votre code !',
                     ];
                     return new JsonResponse($data, 400);
                 }
@@ -191,8 +191,8 @@ class TransactionController extends AbstractController
 
 
         $data = [
-            'STATUS' => 201,
-            'MESSAGE' => 'La transaction a ete bien effectuer',
+            'status3' => 201,
+            'message3' => 'Transaction bien effectuer,Bravo!',
         ];
         return new JsonResponse($data, 201);
     

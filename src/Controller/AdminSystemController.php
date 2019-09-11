@@ -100,7 +100,7 @@ class AdminSystemController extends FOSRestController
   
                 $data =[
                     'STATUS' => 201,
-                    'MESSAGE' => 'Le prestataire a été bien enregistrer!',
+                    'msg1' => 'Votre partenaire a été bien enregistrer!',
                 ];
                 return new JsonResponse($data, 201);
 
@@ -155,7 +155,7 @@ class AdminSystemController extends FOSRestController
             $entityManager->flush();
         $data = [
             'STATUT' => 201,
-            'MESSAGE' => 'Le compte  a été bien créer ',
+            'msg2' => 'Le compte de votre partenaire a été bien créer ',
         ];
         return new JsonResponse($data, 201);
     }
@@ -227,7 +227,7 @@ class AdminSystemController extends FOSRestController
         $mng->flush();
         $data = [
             'status' => 200,
-            'message' => 'Le status a bien été mis à jour!'
+            'mesag12' => 'Le status a bien été mis à jour!'
         ];
         return new JsonResponse($data);
     }
@@ -253,7 +253,7 @@ class AdminSystemController extends FOSRestController
         $mng->flush();
         $data = [
             'status' => 200,
-            'message' => ' Le status a bien été mis à jour !'
+            'messge10' => ' Le status de votre partenaire a bien été mis à jour !'
         ];
         return new JsonResponse($data);
     }

@@ -29,7 +29,7 @@ public function __construct(UserPasswordEncoderInterface $encoder)
         $user->setNom('Ngom');
         $user->setPrenom('Abdoulaye');
         $user->setTelephone('776418887');
-        $user->setStatus('');
+        $user->setStatus(NULL);
         $user->setImageName('Api2.JPG');
         $user->setUpdatedAt(new \DateTime());
         

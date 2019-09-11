@@ -10,10 +10,10 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
     [
         'Symfony\\Component\\Routing\\Annotation\\Route' => [
             'path' => [
-                '/tra',
+                '/contrat',
             ],
             'name' => [
-                'transaction_index',
+                'transaction_contrat',
             ],
             'methods' => [
                 [

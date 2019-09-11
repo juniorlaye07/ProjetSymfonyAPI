@@ -26,7 +26,7 @@ return $getExpiry ? PHP_INT_MAX : Hydrator::hydrate(
         'Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\IsGranted' => [
             'attributes' => [
                 1 => [
-                    'ROLE_ADMIN',
+                    'ROLE_ADMIN_PRS',
                 ],
             ],
             'message' => [
